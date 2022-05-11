@@ -13,14 +13,27 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
+
+import edu.escuelaing.ieti.jeebka.DTOs.UserDto;
 import edu.escuelaing.ieti.jeebka.GroupsView.GroupsViewActivity;
+import edu.escuelaing.ieti.jeebka.Interface.JeebkaApi;
+import edu.escuelaing.ieti.jeebka.Models.LoginResponse;
+import edu.escuelaing.ieti.jeebka.Models.User;
 import edu.escuelaing.ieti.jeebka.R;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 
 public class LoginTabFragment extends Fragment {
     EditText email, pass;
     Button login;
     float v = 0;
+    Retrofit retrofit;
+    JeebkaApi api;
 
     public LoginTabFragment() {
         // Required empty public constructor
@@ -41,6 +54,12 @@ public class LoginTabFragment extends Fragment {
                              Bundle savedInstanceState) {
         ViewGroup root = (ViewGroup) inflater.inflate(R.layout.login_tab_fragment, container, false);
 
+        retrofit = new Retrofit.Builder()
+                .baseUrl("https://jeebka-backend.azurewebsites.net/v1/jeebka/")
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        api = retrofit.create(JeebkaApi.class);
+
         email = root.findViewById(R.id.email);
         pass = root.findViewById(R.id.pass);
         login = root.findViewById(R.id.login_button);
@@ -60,15 +79,59 @@ public class LoginTabFragment extends Fragment {
         login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (String.valueOf(email.getText()).equals("Angie")){
-                    Intent intent = new Intent(getActivity(), GroupsViewActivity.class);
-                    intent.putExtra("username", "Angie");
-                    startActivity(intent);
-                } else{
-                    Toast.makeText(getContext(), "Credenciales erroneas", Toast.LENGTH_SHORT).show();
-                }
+                checkUserCredentials();
             }
         });
         return root;
+    }
+
+    private void checkUserCredentials(){
+
+        UserDto userLogin = new UserDto("as", String.valueOf(email.getText()), String.valueOf(pass.getText()));
+        try{
+            Call<LoginResponse> call = api.login(userLogin);
+            call.enqueue(new Callback<LoginResponse>() {
+                @Override
+                public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
+                    if(!response.isSuccessful()){
+                        Log.i("Not successful log in", response.code() + "");
+                        return;
+                    }
+                    if(response.body().getMsg().equals("loged")){
+                        triggerGroupViewActivity();
+                    }
+
+                }
+
+                @Override
+                public void onFailure(Call<LoginResponse> call, Throwable t) {
+                    Log.i("Log in Failure", t.getMessage());
+                }
+            });
+        } catch (Exception e){
+            Log.i("Log in Failure", e.getMessage());
+        }
+    }
+
+    private void triggerGroupViewActivity(){
+        Call<User> call = api.getUserByEmail(String.valueOf(email.getText()));;
+        call.enqueue(new Callback<User>() {
+            @Override
+            public void onResponse(Call<User> call, Response<User> response) {
+                if(!response.isSuccessful()){
+                    Log.i("Not successful get user", response.code() + "");
+                    return;
+                }
+                User userLogged = response.body();
+                Intent intent = new Intent(getActivity(), GroupsViewActivity.class);
+                intent.putExtra("UserLogged", (new Gson()).toJson(userLogged));
+                startActivity(intent);
+            }
+
+            @Override
+            public void onFailure(Call<User> call, Throwable t) {
+                Log.i("Get user Failure", t.getMessage());
+            }
+        });
     }
 }

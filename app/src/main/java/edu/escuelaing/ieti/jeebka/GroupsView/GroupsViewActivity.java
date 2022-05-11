@@ -7,10 +7,14 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.JsonReader;
 import android.widget.TextView;
+
+import com.google.gson.Gson;
 
 import java.util.ArrayList;
 
+import edu.escuelaing.ieti.jeebka.Models.User;
 import edu.escuelaing.ieti.jeebka.R;
 import edu.escuelaing.ieti.jeebka.GroupDetailsView.GroupDetailsActivity;
 
@@ -30,9 +34,10 @@ public class GroupsViewActivity extends AppCompatActivity implements UpdateRecyc
         setContentView(R.layout.activity_groups_view);
         activity = this;
         Intent intent = getIntent();
-        String username = intent.getStringExtra("username");
+        String username = intent.getStringExtra("UserLogged");
+        User test = (new Gson()).fromJson(username, User.class);
         usernameText = findViewById(R.id.username_field);
-        usernameText.setText(username + "!");
+        usernameText.setText(test.getName() + "!");
         final ArrayList<StatiGroupTypeRvModel> groupTypes = new ArrayList<>();
         groupTypes.add(new StatiGroupTypeRvModel(R.drawable.own_groups, "Mis grupos"));
         groupTypes.add(new StatiGroupTypeRvModel(R.drawable.suggested_group, "Grupos Sugeridos"));

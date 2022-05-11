@@ -39,9 +39,6 @@ import edu.escuelaing.ieti.jeebka.LoginView.LogInActivity;
                 startLogInActivity();
             }
         });
-
-
-
     }
 
     private void startLogInActivity(){
