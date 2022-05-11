@@ -3,6 +3,8 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.graphics.Color;
 import android.os.Build;
+import android.util.JsonReader;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,25 +14,50 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
+import androidx.annotation.RestrictTo;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.gson.JsonParser;
+
 import java.util.ArrayList;
+import java.util.Dictionary;
+import java.util.List;
+import java.util.Map;
 import java.util.Random;
 
+import edu.escuelaing.ieti.jeebka.Interface.JeebkaApi;
+import edu.escuelaing.ieti.jeebka.Models.Group;
+import edu.escuelaing.ieti.jeebka.Models.LoginResponse;
+import edu.escuelaing.ieti.jeebka.Models.User;
 import edu.escuelaing.ieti.jeebka.R;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class StaticRvAdapter  extends  RecyclerView.Adapter<StaticRvAdapter.StaticRVViewHolder> {
     private ArrayList<StatiGroupTypeRvModel> items;
+    private ArrayList<DynamicGroupRvModel> dynamicItems;
     int row_index = -1;
     UpdateRecyclerView updateRecyclerView;
     Activity activity;
     boolean check = true;
     boolean select = true;
+    User user;
+    Retrofit retrofit;
+    JeebkaApi api;
 
-    public StaticRvAdapter(ArrayList<StatiGroupTypeRvModel> items, Activity activity, UpdateRecyclerView updateRecyclerView) {
+    public StaticRvAdapter(ArrayList<StatiGroupTypeRvModel> items, Activity activity, UpdateRecyclerView updateRecyclerView, User user) {
         this.items = items;
         this.activity = activity;
         this.updateRecyclerView = updateRecyclerView;
+        this.user = user;
+        retrofit = new Retrofit.Builder()
+                .baseUrl("https://jeebka-backend.azurewebsites.net/v1/jeebka/")
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        api = retrofit.create(JeebkaApi.class);
     }
 
     public class StaticRVViewHolder extends RecyclerView.ViewHolder {
@@ -61,11 +88,7 @@ public class StaticRvAdapter  extends  RecyclerView.Adapter<StaticRvAdapter.Stat
         holder.imageView.setImageResource(currentItem.getImage());
         holder.nameText.setText(currentItem.getText());
         if (check) {
-            ArrayList<DynamicGroupRvModel> items = new ArrayList<>();
-            for(int i = 0; i < 10; i++)
-                items.add(generateTestGroup(0, false));
-
-            updateRecyclerView.callBack(position, items);
+            callUserGroups(0);
             check = false;
         }
         holder.linearLayout.setOnClickListener(new View.OnClickListener() {
@@ -75,18 +98,14 @@ public class StaticRvAdapter  extends  RecyclerView.Adapter<StaticRvAdapter.Stat
             public void onClick(View view) {
                 row_index = position;
                 notifyDataSetChanged();
-
                 if (position == 0) {
-                    ArrayList<DynamicGroupRvModel> items = new ArrayList<>();
-                    for(int i = 0; i < 10; i++)
-                        items.add(generateTestGroup(0, false));
-
-                    updateRecyclerView.callBack(position, items);
+                    callUserGroups(position);
                 } else if (position == 1) {
-                    ArrayList<DynamicGroupRvModel> items = new ArrayList<>();
+                    callPublicGroups(position);
+                    /*ArrayList<DynamicGroupRvModel> items = new ArrayList<>();
                     for(int i = 0; i < 10; i++)
                         items.add(generateTestGroup(1, true));;
-                    updateRecyclerView.callBack(position, items);
+                    updateRecyclerView.callBack(position, items);*/
                 }
             }
         });
@@ -110,7 +129,7 @@ public class StaticRvAdapter  extends  RecyclerView.Adapter<StaticRvAdapter.Stat
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
-    public DynamicGroupRvModel generateTestGroup(int pos, boolean isPublic){
+    private DynamicGroupRvModel generateTestGroup(int pos, boolean isPublic){
         Random random = new Random();
         int color = generateRandomColor(Color.valueOf(227, 209, 209));
         String description =  "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam vehicula gravida imperdiet. Sed leo odio, rhoncus quis est eget, ultricies commodo nulla. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Nullam dignissim cursus porta. Nulla ornare, dolor efficitur efficitur sollicitudin.";
@@ -128,7 +147,7 @@ public class StaticRvAdapter  extends  RecyclerView.Adapter<StaticRvAdapter.Stat
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
-    public int generateRandomColor(Color mix) {
+    private int generateRandomColor(Color mix) {
         Random random = new Random();
         float red = random.nextInt(256);
         float green = random.nextInt(256);
@@ -143,6 +162,78 @@ public class StaticRvAdapter  extends  RecyclerView.Adapter<StaticRvAdapter.Stat
 
         Color color = Color.valueOf(red, green, blue);
         return color.toArgb();
+    }
+
+    private void callUserGroups(int pos){
+        ArrayList<DynamicGroupRvModel> parsedItems = new ArrayList<>();
+        try{
+            Call<List<Group>> callOwnGroups = api.getGroupsUserOnlyMember(user.email);
+            callOwnGroups.enqueue(new Callback<List<Group>>() {
+                @Override
+                public void onResponse(Call<List<Group>> callOwnGroups, Response<List<Group>> response) {
+                    if(!response.isSuccessful()){
+                        Log.i("Not successful", response.code() + "");
+                        return;
+                    }
+                    for(Group group : response.body()){
+                        parsedItems.add(new DynamicGroupRvModel(group, pos));
+                    }
+
+                    updateRecyclerView.callBack(pos, parsedItems);
+
+                }
+
+                @Override
+                public void onFailure(Call<List<Group>> callOwnGroups, Throwable t) {
+                    Log.i("Failure", t.getMessage());
+                }
+            });
+            Call<List<Group>> callSharedGroups = api.GetGroupsWhereUsersInMembers(user.email);
+            callSharedGroups.enqueue(new Callback<List<Group>>() {
+                @Override
+                public void onResponse(Call<List<Group>> callSharedGroups, Response<List<Group>> response) {
+                    if(!response.isSuccessful()){
+                        Log.i("Not successful", response.code() + "");
+                        return;
+                    }
+                    for(Group group : response.body()){
+                        parsedItems.add(new DynamicGroupRvModel(group, pos));
+                    }
+                    updateRecyclerView.callBack(pos, parsedItems);
+                }
+
+                @Override
+                public void onFailure(Call<List<Group>> callSharedGroups, Throwable t) {
+                    Log.i("Failure", t.getMessage());
+                }
+            });
+        } catch (Exception e){
+            Log.i("Failure", e.getMessage());
+        }
+    }
+
+    private void callPublicGroups(int pos){
+        ArrayList<DynamicGroupRvModel> parsedItems = new ArrayList<>();
+        Call<Map<Group, Integer>> callPublicGroups = api.ShowPublicGroups(user.email);
+        callPublicGroups.enqueue(new Callback<Map<Group, Integer>>() {
+            @Override
+            public void onResponse(Call<Map<Group, Integer>> call, Response<Map<Group, Integer>> response) {
+                if(!response.isSuccessful()){
+                    Log.i("Not successful", response.code() + "");
+                    return;
+                }
+                Log.i("Info", response.body().size() + "");
+                for (Group group : response.body().keySet()){
+                    Log.i("Info", group.toString());
+                }
+                updateRecyclerView.callBack(pos, parsedItems);
+            }
+
+            @Override
+            public void onFailure(Call<Map<Group, Integer>> call, Throwable t) {
+                Log.i("Failure", t.getMessage());
+            }
+        });
     }
 
 }

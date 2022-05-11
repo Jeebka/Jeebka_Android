@@ -13,10 +13,12 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 
+import edu.escuelaing.ieti.jeebka.Models.User;
 import edu.escuelaing.ieti.jeebka.R;
 
 public class DynamicRvAdapter extends  RecyclerView.Adapter<DynamicRvAdapter.DynamicRvHolder>{
     public ArrayList<DynamicGroupRvModel> dynamicRVModels;
+    public User user;
     private OnItemClickListener mListener;
 
     public interface OnItemClickListener{
@@ -27,8 +29,9 @@ public class DynamicRvAdapter extends  RecyclerView.Adapter<DynamicRvAdapter.Dyn
         this.mListener = mListener;
     }
 
-    public DynamicRvAdapter(ArrayList<DynamicGroupRvModel> dynamicRVModels){
+    public DynamicRvAdapter(ArrayList<DynamicGroupRvModel> dynamicRVModels, User user){
         this.dynamicRVModels = dynamicRVModels;
+        this.user = user;
     }
 
     public class DynamicRvHolder extends RecyclerView.ViewHolder {

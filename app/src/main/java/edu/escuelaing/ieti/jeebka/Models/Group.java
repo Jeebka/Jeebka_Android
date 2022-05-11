@@ -1,5 +1,8 @@
 package edu.escuelaing.ieti.jeebka.Models;
 
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
+
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -8,6 +11,8 @@ public class Group {
     public String id;
     public String name;
     public String description;
+    @SerializedName("public")
+    @Expose
     public boolean isPublic;
     public String color;
     public HashSet<String> linksTags;
@@ -85,5 +90,9 @@ public class Group {
 
     public void setLinks(List<String> links) {
         this.links = links;
+    }
+
+    public String toString(){
+        return "Group:{id= " + id + " name= "+ name + " description= " + description + " isPublic= " + isPublic + " color= " + color  + "}";
     }
 }

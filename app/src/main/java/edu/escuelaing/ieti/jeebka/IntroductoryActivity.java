@@ -22,11 +22,19 @@ import edu.escuelaing.ieti.jeebka.LoginView.LogInActivity;
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_introductory);
+        settingUpView();
 
+    }
+
+    private void settingUpView(){
         splashImage = findViewById(R.id.splash_image);
         welcomeText = findViewById(R.id.welcome_text);
         appName = findViewById(R.id.app_name);
+        viewAnimations();
 
+    }
+
+    private void viewAnimations(){
         splashImage.animate().translationY(-2300).setDuration(1000).setStartDelay(800);
         welcomeText.animate().translationY(1400).setDuration(1000).setStartDelay(800);
         appName.animate().translationY(1400).setDuration(1000).setStartDelay(800);

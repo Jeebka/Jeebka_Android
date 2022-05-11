@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
+import edu.escuelaing.ieti.jeebka.Models.Group;
+
 public class DynamicGroupRvModel {
     public String id;
     public String name;
@@ -24,6 +26,17 @@ public class DynamicGroupRvModel {
         this.links = links;
         this.members = members;
         this.linksTags = new HashSet<>();
+    }
+
+    public DynamicGroupRvModel(Group group, int pos){
+        this.name = group.name;
+        this.description = group.description;
+        this.isPublic = group.isPublic;
+        this.color = group.color;
+        this.pos = pos;
+        this.links = group.links;
+        this.members = group.members;
+        this.linksTags = group.linksTags;
     }
 
     public String getId() {

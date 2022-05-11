@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -25,37 +26,47 @@ public class GroupsViewActivity extends AppCompatActivity implements UpdateRecyc
     ArrayList<DynamicGroupRvModel> items = new ArrayList();
     DynamicRvAdapter dynamicRvAdapter;
     Activity activity;
+    User loggedUser;
     int pos;
     TextView usernameText;
 
+    @SuppressLint("SetTextI18n")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_groups_view);
         activity = this;
+        settingUpView();
+    }
+
+
+    private void settingUpView(){
         Intent intent = getIntent();
-        String username = intent.getStringExtra("UserLogged");
-        User test = (new Gson()).fromJson(username, User.class);
+        loggedUser = (new Gson()).fromJson(intent.getStringExtra("LoggedUser"), User.class);
         usernameText = findViewById(R.id.username_field);
-        usernameText.setText(test.getName() + "!");
+        usernameText.setText(loggedUser.getName() + "!");
+        settingUpAdapters();
+
+    }
+
+    private void settingUpAdapters(){
         final ArrayList<StatiGroupTypeRvModel> groupTypes = new ArrayList<>();
         groupTypes.add(new StatiGroupTypeRvModel(R.drawable.own_groups, "Mis grupos"));
         groupTypes.add(new StatiGroupTypeRvModel(R.drawable.suggested_group, "Grupos Sugeridos"));
         staticRecyclerView = findViewById(R.id.rv_1);
-        staticRvAdapter = new StaticRvAdapter(groupTypes, this, this);
+        staticRvAdapter = new StaticRvAdapter(groupTypes, this, this, loggedUser);
         staticRecyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
         staticRecyclerView.setAdapter(staticRvAdapter);
 
         dynamicRecyclerView = findViewById(R.id.rv_2) ;
-        dynamicRvAdapter = new DynamicRvAdapter(items);
+        dynamicRvAdapter = new DynamicRvAdapter(items, loggedUser);
         dynamicRecyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         dynamicRecyclerView.setAdapter(dynamicRvAdapter);
-
     }
 
     @Override
     public void callBack(int position, ArrayList<DynamicGroupRvModel> items) {
-        dynamicRvAdapter = new DynamicRvAdapter(items);
+        dynamicRvAdapter = new DynamicRvAdapter(items, loggedUser);
         dynamicRvAdapter.notifyDataSetChanged();
         dynamicRecyclerView.setAdapter(dynamicRvAdapter);
 

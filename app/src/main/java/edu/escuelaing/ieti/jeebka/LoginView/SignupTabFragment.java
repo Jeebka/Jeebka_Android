@@ -45,6 +45,11 @@ public class SignupTabFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         ViewGroup root = (ViewGroup) inflater.inflate(R.layout.signup_tab_fragment, container, false);
+        settingUpView(root);
+        return root;
+    }
+
+    private void settingUpView(ViewGroup root){
         retrofit = new Retrofit.Builder()
                 .baseUrl("https://jeebka-backend.azurewebsites.net/v1/jeebka/")
                 .addConverterFactory(GsonConverterFactory.create())
@@ -60,7 +65,6 @@ public class SignupTabFragment extends Fragment {
                 createUser();
             }
         });
-        return root;
     }
 
     public void createUser(){
@@ -86,6 +90,5 @@ public class SignupTabFragment extends Fragment {
         } catch (Exception e){
             Log.i("Create user Failure", e.getMessage());
         }
-
     }
 }
