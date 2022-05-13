@@ -5,20 +5,37 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".GroupDetailsView.GroupDetailsActivity"
-    android:background="@color/white">
-
+    android:background="@drawable/pop_up_bg">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/constraintLayout"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:background="@drawable/group_info_bg"
-        android:elevation="15dp"
+        android:elevation="10dp"
+        android:layout_marginTop="30dp"
+        app:layout_constraintVertical_bias="0"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias=".5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintWidth_percent=".8">
+
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/pt_serif_caption"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:text="Crear Link"
+            android:textSize="20dp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toTopOf="@+id/link_name"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <EditText
             android:id="@+id/link_name"
@@ -26,16 +43,19 @@
             android:layout_height="wrap_content"
             android:fontFamily="@font/pt_serif_caption"
             android:hint="Nombre"
-            android:paddingTop="10dp"
+            android:backgroundTint="@color/black"
             android:paddingBottom="10dp"
             android:singleLine="true"
             android:textSize="20dp"
             android:textStyle="bold"
+            android:layout_marginTop="0dp"
+            android:layout_marginBottom="0dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.507"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.187"
+            app:layout_constraintVertical_bias="0.191"
             app:layout_constraintWidth_percent=".8" />
 
         <EditText
@@ -44,10 +64,12 @@
             android:layout_height="wrap_content"
             android:fontFamily="@font/pt_serif_caption"
             android:hint="Url"
-            android:paddingTop="10dp"
+            android:backgroundTint="@color/black"
             android:paddingBottom="10dp"
             android:textSize="20dp"
             android:textStyle="bold"
+            android:layout_marginTop="0dp"
+            android:layout_marginBottom="0dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -55,42 +77,55 @@
             app:layout_constraintVertical_bias="0.187"
             app:layout_constraintWidth_percent=".8" />
 
-        <Spinner
-            android:id="@+id/link_tags"
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/tags_drop_down"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense.ExposedDropdownMenu"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:fontFamily="@font/pt_serif_caption"
-            android:paddingTop="10dp"
-            android:paddingBottom="10dp"
-            android:textStyle="bold"
-            android:layout_marginTop="15dp"
+            android:backgroundTint="@color/black"
+            android:layout_marginLeft="25dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginBottom="50dp"
+            android:hint="Tags"
+            android:maxLines="1"
+            android:inputType="text"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/link_url"
-            app:layout_constraintVertical_bias="0.187"
-            app:layout_constraintWidth_percent=".8"
-            android:background="@android:drawable/btn_dropdown"
-            android:spinnerMode="dropdown"/>
+            app:layout_constraintTop_toBottomOf="@+id/link_url">
 
-        <Spinner
-            android:id="@+id/link_group"
+            <AutoCompleteTextView
+                android:id="@+id/tags_autocomplete_items"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:inputType="none"></AutoCompleteTextView>
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/group_drop_down"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense.ExposedDropdownMenu"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:fontFamily="@font/pt_serif_caption"
-            android:paddingTop="10dp"
-            android:paddingBottom="10dp"
-            android:textStyle="bold"
-            android:layout_marginTop="30dp"
-            android:layout_marginBottom="30dp"
+            android:backgroundTint="@color/black"
+            android:layout_marginLeft="25dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginBottom="20dp"
+            android:layout_marginTop="20dp"
+            android:maxLines="1"
+            android:hint="Grupos"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/link_tags"
-            app:layout_constraintVertical_bias="0.187"
-            app:layout_constraintWidth_percent=".8"
-            android:background="@android:drawable/btn_dropdown"
-            android:spinnerMode="dropdown"/>
+            app:layout_constraintTop_toBottomOf="@+id/tags_drop_down">
+
+            <AutoCompleteTextView
+                android:id="@+id/group_autocomplete_items"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:inputType="none"></AutoCompleteTextView>
+
+        </com.google.android.material.textfield.TextInputLayout>
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -98,10 +133,14 @@
         android:id="@+id/create_link_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="20dp"
         android:layout_marginRight="30dp"
+        android:src="@drawable/plus_icon"
+        android:layout_marginTop="20dp"
+        android:backgroundTint="@color/create_link_inner"
+        app:backgroundTint="@color/create_link_stroke"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:src="@drawable/plus_icon"/>
+        app:layout_constraintVertical_bias="0"
+        app:layout_constraintTop_toBottomOf="@+id/constraintLayout" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

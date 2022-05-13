@@ -17,4 +17,9 @@
     <color name="viridian_green">#1B9B9D</color>
     <color name="skobeloff">#15787A</color>
 
+    <color name="create_group_inner">#ABDEE6</color>
+    <color name="create_group_stroke">#ABDEE6</color>
+    <color name="create_link_inner">#FFCCB6</color>
+    <color name="create_link_stroke">#FFCCB6</color>
+
 </resources>

@@ -6,6 +6,13 @@ public class GroupDto {
     public boolean isPublic;
     public String color;
 
+    public GroupDto(String name, String description, boolean isPublic, String color){
+        this.name = name;
+        this.description = description;
+        this.isPublic = isPublic;
+        this.color = color;
+    }
+
     public String getName() {
         return name;
     }

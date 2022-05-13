@@ -4,6 +4,7 @@ import java.util.Dictionary;
 import java.util.List;
 import java.util.Map;
 
+import edu.escuelaing.ieti.jeebka.DTOs.GroupDto;
 import edu.escuelaing.ieti.jeebka.DTOs.UserDto;
 import edu.escuelaing.ieti.jeebka.Models.Group;
 import edu.escuelaing.ieti.jeebka.Models.Link;
@@ -32,10 +33,10 @@ public interface JeebkaApi {
     @GET("users/{email}/publics")
     Call<Map<Group, Integer>> showPublicGroups(@Path("email") String email);
 
-    @GET("users/{email}/groups")
-    Call<Group> createGroup(@Path("email") String email);
+    @POST("users/{email}/groups")
+    Call<Group> createGroup(@Body GroupDto group, @Path("email") String email);
 
-    @GET("users/{email}/groups/{name}/links")
+    @POST("users/{email}/groups/{name}/links")
     Call<Link> createLink(@Path("email") String email, @Path("name") String name);
 
 }

@@ -81,7 +81,6 @@ public class StaticRvAdapter  extends  RecyclerView.Adapter<StaticRvAdapter.Stat
         return staticRVViewHolder;
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public void onBindViewHolder(@NonNull StaticRvAdapter.StaticRVViewHolder holder, @SuppressLint("RecyclerView") final int position) {
         StatiGroupTypeRvModel currentItem = items.get(position);
@@ -102,10 +101,6 @@ public class StaticRvAdapter  extends  RecyclerView.Adapter<StaticRvAdapter.Stat
                     callUserGroups(position);
                 } else if (position == 1) {
                     callPublicGroups(position);
-                    /*ArrayList<DynamicGroupRvModel> items = new ArrayList<>();
-                    for(int i = 0; i < 10; i++)
-                        items.add(generateTestGroup(1, true));;
-                    updateRecyclerView.callBack(position, items);*/
                 }
             }
         });
@@ -128,47 +123,12 @@ public class StaticRvAdapter  extends  RecyclerView.Adapter<StaticRvAdapter.Stat
         return items.size();
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.O)
-    private DynamicGroupRvModel generateTestGroup(int pos, boolean isPublic){
-        Random random = new Random();
-        int color = generateRandomColor(Color.valueOf(227, 209, 209));
-        String description =  "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam vehicula gravida imperdiet. Sed leo odio, rhoncus quis est eget, ultricies commodo nulla. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Nullam dignissim cursus porta. Nulla ornare, dolor efficitur efficitur sollicitudin.";
-        String hexColor = String.format("#%06X", (0xFFFFFF & color));
-        ArrayList<String> members =  new ArrayList<>();
-        members.add("asd");
-        int max = 20, min = 7;
-        for(int i = 0; i < (random.nextInt(max - min) + min); i++) members.add("asd");
-        ArrayList<String> links =  new ArrayList<>();
-        links.add("asd");
-        if(!isPublic)
-            isPublic = random.nextBoolean();
-        for(int i = 0; i < (random.nextInt(max - min) + min); i++) links.add("asd");
-        return new DynamicGroupRvModel("Grupo " + random.nextInt(200), description,isPublic , hexColor, pos, members, links);
-    }
-
-    @RequiresApi(api = Build.VERSION_CODES.O)
-    private int generateRandomColor(Color mix) {
-        Random random = new Random();
-        float red = random.nextInt(256);
-        float green = random.nextInt(256);
-        float blue = random.nextInt(256);
-
-        // mix the color
-        if (mix != null) {
-            red = (red + (int)mix.red()) / 2;
-            green = (green + (int)mix.green()) / 2;
-            blue = (blue + (int)mix.blue()) / 2;
-        }
-
-        Color color = Color.valueOf(red, green, blue);
-        return color.toArgb();
-    }
-
     private void callUserGroups(int pos){
         ArrayList<DynamicGroupRvModel> parsedItems = new ArrayList<>();
         try{
             Call<List<Group>> callOwnGroups = api.getUsersGroups(user.email);
             callOwnGroups.enqueue(new Callback<List<Group>>() {
+                @RequiresApi(api = Build.VERSION_CODES.O)
                 @Override
                 public void onResponse(Call<List<Group>> callOwnGroups, Response<List<Group>> response) {
                     if(!response.isSuccessful()){
@@ -178,7 +138,6 @@ public class StaticRvAdapter  extends  RecyclerView.Adapter<StaticRvAdapter.Stat
                     for(Group group : response.body()){
                         parsedItems.add(new DynamicGroupRvModel(group, pos));
                     }
-
                     updateRecyclerView.callBack(pos, parsedItems);
 
                 }

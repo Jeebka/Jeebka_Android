@@ -14,4 +14,16 @@
         <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
     </style>
 
+    <style name="Theme.Jeebka.CustomTheme" parent="Theme.MaterialComponents.Light.NoActionBar">
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowCloseOnTouchOutside">true</item>
+        <item name="colorPrimary">@color/create_link_inner</item>
+        <item name="colorPrimaryVariant">@color/create_link_inner</item>
+        <item name="colorOnPrimary">@color/white</item>
+        <!-- Secondary brand color. -->
+        <item name="colorSecondary">@color/create_group_inner</item>
+        <item name="colorSecondaryVariant">@color/create_link_inner</item>
+        <item name="colorOnSecondary">@color/white</item>
+    </style>
+
 </resources>

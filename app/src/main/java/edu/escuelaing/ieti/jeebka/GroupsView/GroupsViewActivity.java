@@ -9,12 +9,16 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.JsonReader;
+import android.view.View;
 import android.widget.TextView;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.gson.Gson;
 
 import java.util.ArrayList;
 
+import edu.escuelaing.ieti.jeebka.CreateGroupActivity;
+import edu.escuelaing.ieti.jeebka.CreateLinkActivity;
 import edu.escuelaing.ieti.jeebka.Models.User;
 import edu.escuelaing.ieti.jeebka.R;
 import edu.escuelaing.ieti.jeebka.GroupDetailsView.GroupDetailsActivity;
@@ -29,6 +33,7 @@ public class GroupsViewActivity extends AppCompatActivity implements UpdateRecyc
     User loggedUser;
     int pos;
     TextView usernameText;
+    FloatingActionButton createGroup, createLink;
 
     @SuppressLint("SetTextI18n")
     @Override
@@ -44,9 +49,37 @@ public class GroupsViewActivity extends AppCompatActivity implements UpdateRecyc
         Intent intent = getIntent();
         loggedUser = (new Gson()).fromJson(intent.getStringExtra("LoggedUser"), User.class);
         usernameText = findViewById(R.id.username_field);
+        createGroup = findViewById(R.id.create_group_button);
+        createLink = findViewById(R.id.create_link_button);
         usernameText.setText(loggedUser.getName() + "!");
+        settingUpListeners();
         settingUpAdapters();
 
+    }
+
+    private void settingUpListeners(){
+        createGroup.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                triggerCreateGroupActivity();
+            }
+        });
+        createLink.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+               triggerCreateLinkActivity();
+            }
+        });
+    }
+
+    private void triggerCreateGroupActivity(){
+        Intent intent = new Intent(GroupsViewActivity.this, CreateGroupActivity.class);
+        intent.putExtra("LoggedUser", (new Gson()).toJson(loggedUser));
+        startActivity(intent);
+    }
+
+    private void triggerCreateLinkActivity(){
+        startActivity(new Intent(GroupsViewActivity.this, CreateLinkActivity.class));
     }
 
     private void settingUpAdapters(){
