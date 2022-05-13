@@ -167,7 +167,7 @@ public class StaticRvAdapter  extends  RecyclerView.Adapter<StaticRvAdapter.Stat
     private void callUserGroups(int pos){
         ArrayList<DynamicGroupRvModel> parsedItems = new ArrayList<>();
         try{
-            Call<List<Group>> callOwnGroups = api.getGroupsUserOnlyMember(user.email);
+            Call<List<Group>> callOwnGroups = api.getUsersGroups(user.email);
             callOwnGroups.enqueue(new Callback<List<Group>>() {
                 @Override
                 public void onResponse(Call<List<Group>> callOwnGroups, Response<List<Group>> response) {
@@ -188,25 +188,6 @@ public class StaticRvAdapter  extends  RecyclerView.Adapter<StaticRvAdapter.Stat
                     Log.i("Failure", t.getMessage());
                 }
             });
-            Call<List<Group>> callSharedGroups = api.GetGroupsWhereUsersInMembers(user.email);
-            callSharedGroups.enqueue(new Callback<List<Group>>() {
-                @Override
-                public void onResponse(Call<List<Group>> callSharedGroups, Response<List<Group>> response) {
-                    if(!response.isSuccessful()){
-                        Log.i("Not successful", response.code() + "");
-                        return;
-                    }
-                    for(Group group : response.body()){
-                        parsedItems.add(new DynamicGroupRvModel(group, pos));
-                    }
-                    updateRecyclerView.callBack(pos, parsedItems);
-                }
-
-                @Override
-                public void onFailure(Call<List<Group>> callSharedGroups, Throwable t) {
-                    Log.i("Failure", t.getMessage());
-                }
-            });
         } catch (Exception e){
             Log.i("Failure", e.getMessage());
         }
@@ -214,7 +195,7 @@ public class StaticRvAdapter  extends  RecyclerView.Adapter<StaticRvAdapter.Stat
 
     private void callPublicGroups(int pos){
         ArrayList<DynamicGroupRvModel> parsedItems = new ArrayList<>();
-        Call<Map<Group, Integer>> callPublicGroups = api.ShowPublicGroups(user.email);
+        Call<Map<Group, Integer>> callPublicGroups = api.showPublicGroups(user.email);
         callPublicGroups.enqueue(new Callback<Map<Group, Integer>>() {
             @Override
             public void onResponse(Call<Map<Group, Integer>> call, Response<Map<Group, Integer>> response) {

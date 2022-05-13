@@ -12,15 +12,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Jeebka">
         <activity
-            android:name=".GroupDetailsView.GroupDetailsActivity"
-            android:exported="false">
-        </activity>
-        <activity
-            android:name=".GroupsView.GroupsViewActivity"
-            android:exported="false">
-        </activity>
-        <activity
-            android:name=".IntroductoryActivity"
+            android:name=".CreateLinkActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -29,12 +21,24 @@
             </intent-filter>
         </activity>
         <activity
+            android:name=".CreateGroupActivity"
+            android:exported="true"></activity>
+        <activity
+            android:name=".GroupDetailsView.GroupDetailsActivity"
+            android:exported="false" />
+        <activity
+            android:name=".GroupsView.GroupsViewActivity"
+            android:exported="false" />
+        <activity
+            android:name=".IntroductoryActivity"
+            android:exported="true">
+        </activity>
+        <activity
             android:name=".LoginView.LogInActivity"
             android:exported="false" />
         <activity
             android:name=".MainActivity"
-            android:exported="true">
-        </activity>
+            android:exported="true" />
     </application>
 
 </manifest>
