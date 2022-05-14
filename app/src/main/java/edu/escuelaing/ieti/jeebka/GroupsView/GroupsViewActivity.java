@@ -79,7 +79,9 @@ public class GroupsViewActivity extends AppCompatActivity implements UpdateRecyc
     }
 
     private void triggerCreateLinkActivity(){
-        startActivity(new Intent(GroupsViewActivity.this, CreateLinkActivity.class));
+        Intent intent = new Intent(GroupsViewActivity.this, CreateLinkActivity.class);
+        intent.putExtra("LoggedUser", (new Gson()).toJson(loggedUser));
+        startActivity(intent);
     }
 
     private void settingUpAdapters(){
@@ -108,13 +110,8 @@ public class GroupsViewActivity extends AppCompatActivity implements UpdateRecyc
             public void onClickItem(int position) {
                 pos = items.get(position).getPos();
                 Intent intent = new Intent(activity, GroupDetailsActivity.class);
+                intent.putExtra("CurrentGroup", (new Gson()).toJson(items.get(position)));
                 intent.putExtra("pos", pos);
-                intent.putExtra("color", items.get(position).getColor());
-                intent.putExtra("name", items.get(position).getName());
-                intent.putExtra("description", items.get(position).getDescription());
-                intent.putExtra("public", items.get(position).isPublic());
-                intent.putExtra("members", items.get(position).getMembers().size());
-                intent.putExtra("links", items.get(position).getLinks().size());
                 startActivity(intent);
             }
         });

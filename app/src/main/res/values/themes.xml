@@ -1,6 +1,6 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
-    <style name="Theme.Jeebka" parent="Theme.AppCompat.Light.NoActionBar">
+    <style name="Theme.Jeebka" parent="Theme.MaterialComponents.Light.NoActionBar">
         <item name="android:windowFullscreen">true</item>
         <!-- Primary brand color. -->
         <item name="colorPrimary">@color/viridian_green</item>
@@ -9,7 +9,7 @@
         <!-- Secondary brand color. -->
         <item name="colorSecondary">@color/teal_200</item>
         <item name="colorSecondaryVariant">@color/teal_700</item>
-        <item name="colorOnSecondary">@color/black</item>
+        <item name="colorOnSecondary">@color/white</item>
         <!-- Status bar color. -->
         <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
     </style>
@@ -24,6 +24,13 @@
         <item name="colorSecondary">@color/create_group_inner</item>
         <item name="colorSecondaryVariant">@color/create_link_inner</item>
         <item name="colorOnSecondary">@color/white</item>
+    </style>
+
+    <style name="Theme.Jeebka.CustomChipStyle" parent="Widget.MaterialComponents.Chip.Filter">
+        <item name="chipBackgroundColor">@color/chip_background_color</item>
+        <item name="android:textColor">@color/chip_text_color</item>
+        <item name="checkedIconTint">@color/white</item>
+        <item name="rippleColor">@color/whiteAlpha</item>
     </style>
 
 </resources>

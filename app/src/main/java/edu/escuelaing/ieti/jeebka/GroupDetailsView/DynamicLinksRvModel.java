@@ -4,6 +4,9 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import edu.escuelaing.ieti.jeebka.Models.Group;
+import edu.escuelaing.ieti.jeebka.Models.Link;
+
 public class DynamicLinksRvModel {
     public String id;
     public String url;
@@ -19,6 +22,15 @@ public class DynamicLinksRvModel {
         this.pos = pos;
         this.groups = new ArrayList<>();
         this.tags = new ArrayList<>();
+        tags.add("tag1"); tags.add("tag2"); tags.add("tag3"); tags.add("tag4");
+    }
+
+    public DynamicLinksRvModel(Link link, int pos) {
+        this.name = link.getName();
+        this.url = link.getUrl();
+        this.pos = pos;
+        this.groups = link.getGroups();
+        this.tags = link.getTags();
     }
 
     public String getId() {

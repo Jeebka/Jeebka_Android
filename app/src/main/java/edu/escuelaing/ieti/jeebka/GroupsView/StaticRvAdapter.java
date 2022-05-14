@@ -162,9 +162,8 @@ public class StaticRvAdapter  extends  RecyclerView.Adapter<StaticRvAdapter.Stat
                     Log.i("Not successful", response.code() + "");
                     return;
                 }
-                Log.i("Info", response.body().size() + "");
                 for (Group group : response.body().keySet()){
-                    Log.i("Info", group.toString());
+                    parsedItems.add(new DynamicGroupRvModel(group, pos));
                 }
                 updateRecyclerView.callBack(pos, parsedItems);
             }

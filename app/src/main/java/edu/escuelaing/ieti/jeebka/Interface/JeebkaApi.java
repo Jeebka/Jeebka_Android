@@ -38,5 +38,6 @@ public interface JeebkaApi {
 
     @POST("users/{email}/groups/{name}/links")
     Call<Link> createLink(@Path("email") String email, @Path("name") String name);
+    
 
 }

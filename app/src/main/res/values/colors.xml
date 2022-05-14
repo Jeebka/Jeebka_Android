@@ -9,6 +9,9 @@
 
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="whiteAlpha">#10FFFFFF</color>
+    <color name="mediumGray">#EDEDED</color>
+    <color name="darkGray">#858585</color>
     <color name="cultured">#F5F5F5</color>
     <color name="azure">#EEFCFC</color>
     <color name="celeste">#B9F2F3</color>
