@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.List;
 
 import edu.escuelaing.ieti.jeebka.Models.Group;
+import edu.escuelaing.ieti.jeebka.Models.Link;
 
 public class DynamicGroupRvModel {
     public String id;
@@ -14,10 +15,10 @@ public class DynamicGroupRvModel {
     public String color;
     public HashSet<String> linksTags;
     public List<String> members;
-    public List<String> links;
+    public List<Link> links;
     int pos;
 
-    public DynamicGroupRvModel(String name, String description, boolean isPublic, String color, int pos, List<String> members, List<String> links) {
+    public DynamicGroupRvModel(String name, String description, boolean isPublic, String color, int pos, List<String> members, List<Link> links) {
         this.name = name;
         this.description = description;
         this.isPublic = isPublic;
@@ -67,7 +68,7 @@ public class DynamicGroupRvModel {
         return members;
     }
 
-    public List<String> getLinks() {
+    public List<Link> getLinks() {
         return links;
     }
 

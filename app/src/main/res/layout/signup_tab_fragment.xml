@@ -50,6 +50,7 @@
         android:background="@drawable/edit_text_bg"
         android:hint="Contraseña"
         android:paddingLeft="20dp"
+        android:inputType="textPassword"
         android:paddingTop="10dp"
         android:paddingBottom="10dp"
         app:layout_constraintBottom_toBottomOf="parent"

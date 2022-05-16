@@ -1,11 +1,10 @@
-package edu.escuelaing.ieti.jeebka;
+package edu.escuelaing.ieti.jeebka.CreateViews;
 
 import android.app.Activity;
 import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
-import android.media.Image;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
@@ -27,6 +26,7 @@ import edu.escuelaing.ieti.jeebka.GroupsView.GroupsViewActivity;
 import edu.escuelaing.ieti.jeebka.Interface.JeebkaApi;
 import edu.escuelaing.ieti.jeebka.Models.Group;
 import edu.escuelaing.ieti.jeebka.Models.User;
+import edu.escuelaing.ieti.jeebka.R;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;

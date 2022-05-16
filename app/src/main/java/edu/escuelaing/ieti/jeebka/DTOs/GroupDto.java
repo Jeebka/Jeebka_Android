@@ -1,8 +1,13 @@
 package edu.escuelaing.ieti.jeebka.DTOs;
 
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
+
 public class GroupDto {
     public String name;
     public String description;
+    @SerializedName("public")
+    @Expose
     public boolean isPublic;
     public String color;
 

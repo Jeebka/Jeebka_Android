@@ -1,4 +1,7 @@
 package edu.escuelaing.ieti.jeebka.LoginView;
+import android.app.Dialog;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -9,6 +12,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import edu.escuelaing.ieti.jeebka.DTOs.UserDto;
 import edu.escuelaing.ieti.jeebka.Interface.JeebkaApi;
@@ -26,6 +31,7 @@ public class SignupTabFragment extends Fragment {
     JeebkaApi api;
     Button signUp;
     EditText username, email, pass;
+    Dialog dialog;
 
     public SignupTabFragment() {
 
@@ -59,10 +65,12 @@ public class SignupTabFragment extends Fragment {
         email = root.findViewById(R.id.email);
         pass = root.findViewById(R.id.pass);
         signUp = root.findViewById(R.id.sign_up);
+        dialog = new Dialog(getContext());
         signUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                createUser();
+                if(!username.getText().toString().equals("") && !email.getText().toString().equals("") && !pass.getText().toString().equals(""))
+                    createUser();
             }
         });
     }
@@ -77,18 +85,45 @@ public class SignupTabFragment extends Fragment {
                 public void onResponse(Call<UserDto> call, Response<UserDto> response) {
                     if(!response.isSuccessful()){
                         Log.i("Not successful log in", response.code() + "");
+                        openErrorWindow();
                         return;
                     }
+                    username.setText(""); email.setText(""); pass.setText("");
                     Log.i("Create user", "User created");
                 }
 
                 @Override
                 public void onFailure(Call<UserDto> call, Throwable t) {
+                    openErrorWindow();
                     Log.i("Create user Failure", t.getMessage());
                 }
             });
         } catch (Exception e){
+            openErrorWindow();
             Log.i("Create user Failure", e.getMessage());
         }
+    }
+
+    private void openErrorWindow(){
+        dialog.setContentView(R.layout.error_dialog);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        TextView errorText = dialog.findViewById(R.id.error_text);
+        errorText.setText("Ocurrio un problema al intentar registrarse.");
+        Button closeDialogButton = dialog.findViewById(R.id.ok_button);
+        closeDialogButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.dismiss();
+            }
+        });
+        ImageView closeIcon = dialog.findViewById(R.id.close_icon);
+        closeIcon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.dismiss();
+            }
+        });
+
+        dialog.show();
     }
 }

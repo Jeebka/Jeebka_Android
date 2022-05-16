@@ -4,7 +4,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.viewpager2.widget.ViewPager2;
 
+import android.app.Dialog;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 
 import com.google.android.material.tabs.TabLayout;
@@ -15,6 +18,7 @@ import edu.escuelaing.ieti.jeebka.R;
 public class LogInActivity extends AppCompatActivity {
     TabLayout tabLayout;
     ViewPager2 viewPager;
+    Dialog dialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

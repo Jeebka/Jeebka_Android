@@ -17,7 +17,7 @@ public class Group {
     public String color;
     public HashSet<String> linksTags;
     public List<String> members;
-    public List<String> links;
+    public List<Link> links;
 
     public Group(String name, boolean isPublic, String color) {
         this.name = name;
@@ -84,15 +84,15 @@ public class Group {
         this.members = members;
     }
 
-    public List<String> getLinks() {
+    public List<Link> getLinks() {
         return links;
     }
 
-    public void setLinks(List<String> links) {
+    public void setLinks(List<Link> links) {
         this.links = links;
     }
 
     public String toString(){
-        return "Group:{id= " + id + " name= "+ name + " description= " + description + " isPublic= " + isPublic + " color= " + color  + "}";
+        return "Group:{id= " + id + " name= "+ name + " description= " + description + " isPublic= " + isPublic + " color= " + color  + " links= " + links.size() +"}";
     }
 }

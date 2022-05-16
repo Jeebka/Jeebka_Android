@@ -1,6 +1,11 @@
 package edu.escuelaing.ieti.jeebka.LoginView;
 
+import android.app.Activity;
+import android.app.Dialog;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
+import android.media.Image;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -12,8 +17,11 @@ import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.airbnb.lottie.L;
 import com.google.gson.Gson;
 
 import edu.escuelaing.ieti.jeebka.DTOs.UserDto;
@@ -32,10 +40,11 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class LoginTabFragment extends Fragment {
     EditText email, pass;
-    Button login;
+    Button login, dialogButton;
     float v = 0;
     Retrofit retrofit;
     JeebkaApi api;
+    Dialog dialog;
 
     public LoginTabFragment() {
         // Required empty public constructor
@@ -69,14 +78,39 @@ public class LoginTabFragment extends Fragment {
         email = root.findViewById(R.id.email);
         pass = root.findViewById(R.id.pass);
         login = root.findViewById(R.id.login_button);
+        dialog = new Dialog(getContext());
         viewAnimations();
         login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                checkUserCredentials();
+                if(!email.getText().toString().equals("") && !pass.getText().toString().equals(""))
+                    checkUserCredentials();
             }
         });
 
+    }
+
+    private void openErrorWindow(){
+        dialog.setContentView(R.layout.error_dialog);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        TextView errorText = dialog.findViewById(R.id.error_text);
+        errorText.setText("Ocurrio un problema al intentar acceder a su cuenta.");
+        Button closeDialogButton = dialog.findViewById(R.id.ok_button);
+        closeDialogButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.dismiss();
+            }
+        });
+        ImageView closeIcon = dialog.findViewById(R.id.close_icon);
+        closeIcon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.dismiss();
+            }
+        });
+
+        dialog.show();
     }
 
     private void viewAnimations(){
@@ -101,6 +135,7 @@ public class LoginTabFragment extends Fragment {
                 public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
                     if(!response.isSuccessful()){
                         Log.i("Not successful log in", response.code() + "");
+                        openErrorWindow();
                         return;
                     }
                     if(response.body().getMsg().equals("loged")){
@@ -111,10 +146,12 @@ public class LoginTabFragment extends Fragment {
 
                 @Override
                 public void onFailure(Call<LoginResponse> call, Throwable t) {
+                    openErrorWindow();
                     Log.i("Log in Failure", t.getMessage());
                 }
             });
         } catch (Exception e){
+            openErrorWindow();
             Log.i("Log in Failure", e.getMessage());
         }
     }

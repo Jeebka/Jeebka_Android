@@ -82,6 +82,7 @@
         <entry key="..\:/Users/jrper/Desktop/Universidad/IETI/Jeebka - copia/app/src/main/res/layout/suggested_group_list.xml" value="0.2911458333333333" />
         <entry key="..\:/Users/jrper/Desktop/Universidad/IETI/Jeebka - copia/app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.1845" />
         <entry key="..\:/Users/jrper/Desktop/Universidad/IETI/Jeebka - copia/app/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml" value="0.1845" />
+        <entry key="..\:/Users/jrper/Desktop/Universidad/IETI/Jeebka/app/src/main/res/drawable-v24/button_error_bg.xml" value="0.2425" />
         <entry key="..\:/Users/jrper/Desktop/Universidad/IETI/Jeebka/app/src/main/res/drawable-v24/ic_launcher_foreground.xml" value="0.179" />
         <entry key="..\:/Users/jrper/Desktop/Universidad/IETI/Jeebka/app/src/main/res/drawable/back_icon.xml" value="0.247" />
         <entry key="..\:/Users/jrper/Desktop/Universidad/IETI/Jeebka/app/src/main/res/drawable/button_bg.xml" value="0.3675" />
@@ -94,6 +95,7 @@
         <entry key="..\:/Users/jrper/Desktop/Universidad/IETI/Jeebka/app/src/main/res/drawable/group_info_bg.xml" value="0.247" />
         <entry key="..\:/Users/jrper/Desktop/Universidad/IETI/Jeebka/app/src/main/res/drawable/group_rv_bg.xml" value="0.247" />
         <entry key="..\:/Users/jrper/Desktop/Universidad/IETI/Jeebka/app/src/main/res/drawable/ic_brightness_1_black_24dp.xml" value="0.2755" />
+        <entry key="..\:/Users/jrper/Desktop/Universidad/IETI/Jeebka/app/src/main/res/drawable/ic_close.xml" value="0.186" />
         <entry key="..\:/Users/jrper/Desktop/Universidad/IETI/Jeebka/app/src/main/res/drawable/ic_launcher_background.xml" value="0.328" />
         <entry key="..\:/Users/jrper/Desktop/Universidad/IETI/Jeebka/app/src/main/res/drawable/ic_sentiment_dissatisfied_36dp.xml" value="0.2755" />
         <entry key="..\:/Users/jrper/Desktop/Universidad/IETI/Jeebka/app/src/main/res/drawable/ic_sentiment_satisfied_36dp.xml" value="0.2755" />
@@ -104,6 +106,8 @@
         <entry key="..\:/Users/jrper/Desktop/Universidad/IETI/Jeebka/app/src/main/res/drawable/pop_up.xml" value="0.2695" />
         <entry key="..\:/Users/jrper/Desktop/Universidad/IETI/Jeebka/app/src/main/res/drawable/private_group.xml" value="0.2755" />
         <entry key="..\:/Users/jrper/Desktop/Universidad/IETI/Jeebka/app/src/main/res/drawable/public_group.xml" value="0.2755" />
+        <entry key="..\:/Users/jrper/Desktop/Universidad/IETI/Jeebka/app/src/main/res/drawable/search2_bg.xml" value="0.315" />
+        <entry key="..\:/Users/jrper/Desktop/Universidad/IETI/Jeebka/app/src/main/res/drawable/search_bg.xml" value="0.283" />
         <entry key="..\:/Users/jrper/Desktop/Universidad/IETI/Jeebka/app/src/main/res/drawable/static_rv_bg.xml" value="0.247" />
         <entry key="..\:/Users/jrper/Desktop/Universidad/IETI/Jeebka/app/src/main/res/drawable/static_rv_selected_bg.xml" value="0.247" />
         <entry key="..\:/Users/jrper/Desktop/Universidad/IETI/Jeebka/app/src/main/res/drawable/switch_thumb_false.xml" value="0.3065" />
@@ -116,7 +120,7 @@
         <entry key="..\:/Users/jrper/Desktop/Universidad/IETI/Jeebka/app/src/main/res/drawable/track_selector.xml" value="0.2755" />
         <entry key="..\:/Users/jrper/Desktop/Universidad/IETI/Jeebka/app/src/main/res/drawable/vie_bg.xml" value="0.2895" />
         <entry key="..\:/Users/jrper/Desktop/Universidad/IETI/Jeebka/app/src/main/res/layout/activity_create_group.xml" value="0.33" />
-        <entry key="..\:/Users/jrper/Desktop/Universidad/IETI/Jeebka/app/src/main/res/layout/activity_create_link.xml" value="0.2234375" />
+        <entry key="..\:/Users/jrper/Desktop/Universidad/IETI/Jeebka/app/src/main/res/layout/activity_create_link.xml" value="0.33" />
         <entry key="..\:/Users/jrper/Desktop/Universidad/IETI/Jeebka/app/src/main/res/layout/activity_group_details.xml" value="0.33" />
         <entry key="..\:/Users/jrper/Desktop/Universidad/IETI/Jeebka/app/src/main/res/layout/activity_groups_view.xml" value="0.22083333333333333" />
         <entry key="..\:/Users/jrper/Desktop/Universidad/IETI/Jeebka/app/src/main/res/layout/activity_log_in.xml" value="0.33" />
@@ -124,6 +128,8 @@
         <entry key="..\:/Users/jrper/Desktop/Universidad/IETI/Jeebka/app/src/main/res/layout/activity_main.xml" value="0.3446557971014493" />
         <entry key="..\:/Users/jrper/Desktop/Universidad/IETI/Jeebka/app/src/main/res/layout/activity_switch.xml" value="0.36666666666666664" />
         <entry key="..\:/Users/jrper/Desktop/Universidad/IETI/Jeebka/app/src/main/res/layout/drop_down_item.xml" value="0.22447916666666667" />
+        <entry key="..\:/Users/jrper/Desktop/Universidad/IETI/Jeebka/app/src/main/res/layout/error_dialog.xml" value="0.17760416666666667" />
+        <entry key="..\:/Users/jrper/Desktop/Universidad/IETI/Jeebka/app/src/main/res/layout/errror_dialog.xml" value="0.25" />
         <entry key="..\:/Users/jrper/Desktop/Universidad/IETI/Jeebka/app/src/main/res/layout/fragment_create_group.xml" value="0.27239583333333334" />
         <entry key="..\:/Users/jrper/Desktop/Universidad/IETI/Jeebka/app/src/main/res/layout/group_rv_item_layout.xml" value="0.33" />
         <entry key="..\:/Users/jrper/Desktop/Universidad/IETI/Jeebka/app/src/main/res/layout/link_rv_item_layout.xml" value="0.33" />

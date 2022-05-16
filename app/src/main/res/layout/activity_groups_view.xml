@@ -75,6 +75,7 @@
                 app:layout_constraintTop_toTopOf="@+id/hello_text"
                 app:layout_constraintVertical_bias="0"/>
 
+
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rv_1"
                 android:layout_width="wrap_content"
@@ -82,10 +83,33 @@
                 app:layout_constraintVertical_bias="0"
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp"
+                android:layout_marginTop="10dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/hello_text"/>
+
+            <EditText
+                android:id="@+id/search"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:background="@drawable/search_bg"
+                android:elevation="4dp"
+                android:fontFamily="@font/quattrocento_bold"
+                android:hint="Search"
+                android:paddingLeft="20dp"
+                android:paddingTop="15dp"
+                android:paddingBottom="10dp"
+                android:textSize="14sp"
+                android:layout_marginLeft="40dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/rv_1"
+                app:layout_constraintVertical_bias="0"
+                app:layout_constraintWidth_percent=".7" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rv_2"
@@ -100,7 +124,7 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/rv_1"/>
+                app:layout_constraintTop_toBottomOf="@+id/search"/>
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <androidx.constraintlayout.widget.ConstraintLayout

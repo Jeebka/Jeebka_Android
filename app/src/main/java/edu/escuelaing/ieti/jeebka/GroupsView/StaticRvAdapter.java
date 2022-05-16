@@ -3,11 +3,14 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.graphics.Color;
 import android.os.Build;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.JsonReader;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -47,6 +50,7 @@ public class StaticRvAdapter  extends  RecyclerView.Adapter<StaticRvAdapter.Stat
     User user;
     Retrofit retrofit;
     JeebkaApi api;
+    EditText search;
 
     public StaticRvAdapter(ArrayList<StatiGroupTypeRvModel> items, Activity activity, UpdateRecyclerView updateRecyclerView, User user) {
         this.items = items;
@@ -58,6 +62,7 @@ public class StaticRvAdapter  extends  RecyclerView.Adapter<StaticRvAdapter.Stat
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         api = retrofit.create(JeebkaApi.class);
+        search = activity.findViewById(R.id.search);
     }
 
     public class StaticRVViewHolder extends RecyclerView.ViewHolder {
@@ -98,8 +103,10 @@ public class StaticRvAdapter  extends  RecyclerView.Adapter<StaticRvAdapter.Stat
                 row_index = position;
                 notifyDataSetChanged();
                 if (position == 0) {
+                    search.setVisibility(View.VISIBLE);
                     callUserGroups(position);
                 } else if (position == 1) {
+                    search.setVisibility(View.INVISIBLE);
                     callPublicGroups(position);
                 }
             }
@@ -123,7 +130,7 @@ public class StaticRvAdapter  extends  RecyclerView.Adapter<StaticRvAdapter.Stat
         return items.size();
     }
 
-    private void callUserGroups(int pos){
+    public void callUserGroups(int pos){
         ArrayList<DynamicGroupRvModel> parsedItems = new ArrayList<>();
         try{
             Call<List<Group>> callOwnGroups = api.getUsersGroups(user.email);
@@ -154,22 +161,22 @@ public class StaticRvAdapter  extends  RecyclerView.Adapter<StaticRvAdapter.Stat
 
     private void callPublicGroups(int pos){
         ArrayList<DynamicGroupRvModel> parsedItems = new ArrayList<>();
-        Call<Map<Group, Integer>> callPublicGroups = api.showPublicGroups(user.email);
-        callPublicGroups.enqueue(new Callback<Map<Group, Integer>>() {
+        Call<List<Group>> callPublicGroups = api.showPublicGroups(user.email);
+        callPublicGroups.enqueue(new Callback<List<Group>>() {
             @Override
-            public void onResponse(Call<Map<Group, Integer>> call, Response<Map<Group, Integer>> response) {
+            public void onResponse(Call<List<Group>> call, Response<List<Group>> response) {
                 if(!response.isSuccessful()){
                     Log.i("Not successful", response.code() + "");
                     return;
                 }
-                for (Group group : response.body().keySet()){
+                for (Group group : response.body()){
                     parsedItems.add(new DynamicGroupRvModel(group, pos));
                 }
                 updateRecyclerView.callBack(pos, parsedItems);
             }
 
             @Override
-            public void onFailure(Call<Map<Group, Integer>> call, Throwable t) {
+            public void onFailure(Call<List<Group>> call, Throwable t) {
                 Log.i("Failure", t.getMessage());
             }
         });

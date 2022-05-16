@@ -1,6 +1,7 @@
 package edu.escuelaing.ieti.jeebka.GroupDetailsView;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Build;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -15,13 +16,16 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
+import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import edu.escuelaing.ieti.jeebka.CreateViews.CreateLinkActivity;
 import edu.escuelaing.ieti.jeebka.GroupsView.DynamicGroupRvModel;
 import edu.escuelaing.ieti.jeebka.Interface.JeebkaApi;
 import edu.escuelaing.ieti.jeebka.Models.Group;
+import edu.escuelaing.ieti.jeebka.Models.Link;
 import edu.escuelaing.ieti.jeebka.R;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -37,8 +41,8 @@ public class DynamicGroupDetailsRvAdapter extends  RecyclerView.Adapter<DynamicG
     Group group;
     Retrofit retrofit;
     JeebkaApi api;
-    Activity activity;
-    public DynamicGroupDetailsRvAdapter(ArrayList<DynamicLinksRvModel> dynamicLinksRVModels, Group group, Activity activity){
+    GroupDetailsActivity activity;
+    public DynamicGroupDetailsRvAdapter(ArrayList<DynamicLinksRvModel> dynamicLinksRVModels, Group group, GroupDetailsActivity activity){
         this.dynamicLinksRVModels = dynamicLinksRVModels;
         this.group = group;
         this.activity = activity;
@@ -67,7 +71,6 @@ public class DynamicGroupDetailsRvAdapter extends  RecyclerView.Adapter<DynamicG
     @Override
     public DynamicRvResHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.link_rv_item_layout, parent, false);
-        Log.i("OnCreate", dynamicLinksRVModels.size() + "");
         DynamicGroupDetailsRvAdapter.DynamicRvResHolder dynamicRvResHolder = new DynamicGroupDetailsRvAdapter.DynamicRvResHolder(view);
         return dynamicRvResHolder;
     }
@@ -75,14 +78,29 @@ public class DynamicGroupDetailsRvAdapter extends  RecyclerView.Adapter<DynamicG
     @Override
     public void onBindViewHolder(@NonNull DynamicRvResHolder holder, int position) {
         DynamicLinksRvModel currentItem = dynamicLinksRVModels.get(position);
+
         holder.linkName.setText(currentItem.getName());
         holder.linkUrl.setText(currentItem.getUrl());
         for(String tagName : currentItem.getTags()){
             Chip chip =  new Chip(activity);
             chip.setText(tagName);
-            chip.setEnabled(false);
+            chip.setCheckable(false);
+            chip.setClickable(false);
             holder.tagsContainer.addView(chip);
+            chip.setOnCloseIconClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    holder.tagsContainer.removeView(view);
+                }
+            });
         }
+        holder.constraintLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Link link = new Link(currentItem);
+                triggerCreateLinkActivity(link);
+            }
+        });
 
         p = currentItem.getPos();
         /*dynamicLinksRVModels = new ArrayList<>();
@@ -97,6 +115,10 @@ public class DynamicGroupDetailsRvAdapter extends  RecyclerView.Adapter<DynamicG
         dynamicLinksRVModels.add(new DynamicLinksRvModel("Link 9", "http:google.com", p));
         dynamicLinksRVModels.add(new DynamicLinksRvModel("Link 10", "http:youtube.com", p));
         notifyDataSetChanged();*/
+    }
+
+    private void triggerCreateLinkActivity(Link link){
+        activity.triggerCreateLinkActivity(link);
     }
 
     /*private DynamicLinksRvModel getLinks(int position){
@@ -132,4 +154,5 @@ public class DynamicGroupDetailsRvAdapter extends  RecyclerView.Adapter<DynamicG
     public int getItemCount() {
         return dynamicLinksRVModels.size();
     }
+
 }

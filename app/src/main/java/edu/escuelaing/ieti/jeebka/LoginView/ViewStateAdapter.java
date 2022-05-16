@@ -1,5 +1,7 @@
 package edu.escuelaing.ieti.jeebka.LoginView;
 
+import android.app.Activity;
+
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
@@ -8,7 +10,7 @@ import androidx.viewpager2.adapter.FragmentStateAdapter;
 
 public class ViewStateAdapter extends FragmentStateAdapter {
 
-    public ViewStateAdapter(@NonNull FragmentManager fragmentManager, @NonNull Lifecycle lifecycle) {
+    public ViewStateAdapter(@NonNull FragmentManager fragmentManager, @NonNull Lifecycle lifecycle){
         super(fragmentManager, lifecycle);
     }
 

@@ -1,10 +1,13 @@
 package edu.escuelaing.ieti.jeebka.Interface;
 
 import java.util.Dictionary;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
 import edu.escuelaing.ieti.jeebka.DTOs.GroupDto;
+import edu.escuelaing.ieti.jeebka.DTOs.LinkDto;
+import edu.escuelaing.ieti.jeebka.DTOs.TaggedLinkDto;
 import edu.escuelaing.ieti.jeebka.DTOs.UserDto;
 import edu.escuelaing.ieti.jeebka.Models.Group;
 import edu.escuelaing.ieti.jeebka.Models.Link;
@@ -30,14 +33,23 @@ public interface JeebkaApi {
     @GET("users/{email}/groups")
     Call<List<Group>> getUsersGroups(@Path("email") String email);
 
-    @GET("users/{email}/publics")
-    Call<Map<Group, Integer>> showPublicGroups(@Path("email") String email);
+    @GET("users/{email}/groups/{name}")
+    Call<Group> getGroup(@Path("email") String email, @Path("name") String name);
+
+    @GET("users/{email}/query/matchingPublicGroups")
+    Call<List<Group>> showPublicGroups(@Path("email") String email);
 
     @POST("users/{email}/groups")
     Call<Group> createGroup(@Body GroupDto group, @Path("email") String email);
 
     @POST("users/{email}/groups/{name}/links")
-    Call<Link> createLink(@Path("email") String email, @Path("name") String name);
+    Call<LinkDto> createLinkNoTags(@Body LinkDto link, @Path("email") String email, @Path("name") String name);
+
+    @POST("users/{email}/groups/{name}/tagLinks")
+    Call<TaggedLinkDto> createLinkTags(@Body TaggedLinkDto link, @Path("email") String email, @Path("name") String name);
+
+    @GET("users/{email}/query/tags")
+    Call<HashSet<String>> getUserTags(@Path("email") String email);
     
 
 }

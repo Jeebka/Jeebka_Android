@@ -7,7 +7,7 @@ public class User {
     public String name;
     public String password;
     public String email;
-    public List<String> groups;
+    public List<Group> groups;
 
     public String getId() {
         return id;
@@ -41,11 +41,11 @@ public class User {
         this.email = email;
     }
 
-    public List<String> getGroups() {
+    public List<Group> getGroups() {
         return groups;
     }
 
-    public void setGroups(List<String> groups) {
+    public void setGroups(List<Group> groups) {
         this.groups = groups;
     }
 

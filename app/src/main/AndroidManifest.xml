@@ -12,12 +12,11 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Jeebka">
         <activity
-            android:name=".CreateLinkActivity"
-            android:exported="false"
-            android:theme="@style/Theme.Jeebka.CustomTheme">
+            android:name=".CreateViews.CreateLinkActivity"
+            android:exported="false">
         </activity>
         <activity
-            android:name=".CreateGroupActivity"
+            android:name=".CreateViews.CreateGroupActivity"
             android:exported="false"
             android:theme="@style/Theme.Jeebka.CustomTheme"></activity>
         <activity

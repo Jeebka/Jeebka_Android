@@ -1,7 +1,12 @@
 package edu.escuelaing.ieti.jeebka.Models;
 
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
+
+import edu.escuelaing.ieti.jeebka.GroupDetailsView.DynamicLinksRvModel;
 
 public class Link {
     public String id;
@@ -9,7 +14,21 @@ public class Link {
     public String name;
     public Date date;
     public List<String> groups;
-    public List<String> Tags;
+    public List<String> tags;
+
+    public Link(String url, String name, List<String> tags, List<String> groups){
+        id = UUID.randomUUID().toString();
+        this.url = url;
+        this.name = name;
+        date = new Date();
+        this.tags = tags;
+        this.groups = groups;
+    }
+    public Link(DynamicLinksRvModel rvModel){
+        url = rvModel.getUrl();
+        name = rvModel.getName();
+        tags = rvModel.getTags();
+    }
 
     public String getId() {
         return id;
@@ -52,10 +71,10 @@ public class Link {
     }
 
     public List<String> getTags() {
-        return Tags;
+        return tags;
     }
 
     public void setTags(List<String> tags) {
-        Tags = tags;
+        tags = tags;
     }
 }
