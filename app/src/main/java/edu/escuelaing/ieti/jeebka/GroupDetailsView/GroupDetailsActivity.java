@@ -12,7 +12,6 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
@@ -28,7 +27,6 @@ import java.util.List;
 import edu.escuelaing.ieti.jeebka.CreateViews.CreateLinkActivity;
 import edu.escuelaing.ieti.jeebka.GroupsView.GroupsViewActivity;
 import edu.escuelaing.ieti.jeebka.Interface.JeebkaApi;
-import edu.escuelaing.ieti.jeebka.LoginView.LogInActivity;
 import edu.escuelaing.ieti.jeebka.Models.Group;
 import edu.escuelaing.ieti.jeebka.Models.Link;
 import edu.escuelaing.ieti.jeebka.Models.User;
@@ -39,7 +37,7 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class GroupDetailsActivity extends AppCompatActivity {
+public class GroupDetailsActivity extends AppCompatActivity implements UpdateLinkRecyclerView{
 
     private RecyclerView dynamicRecyclerView;
     ImageView backgroundImage, publicImageIcon;
@@ -57,6 +55,13 @@ public class GroupDetailsActivity extends AppCompatActivity {
     TextInputLayout searchOptionsLayout;
     AutoCompleteTextView searchOptionsAutoCompleteText;
     ChipGroup searchItemsChipGroup;
+
+    @Override
+    public void onBackPressed() {
+        Intent intent = new Intent(GroupDetailsActivity.this, GroupsViewActivity.class);
+        intent.putExtra("LoggedUser", (new Gson()).toJson(user));
+        startActivity(intent);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,7 +82,6 @@ public class GroupDetailsActivity extends AppCompatActivity {
         pos = intent.getIntExtra("pos", 0);
         group = (new Gson()).fromJson(intent.getStringExtra("CurrentGroup"), Group.class);
         user = (new Gson()).fromJson(intent.getStringExtra("LoggedUser"), User.class);
-        Log.i("Position", pos + "");
         if(pos == 0){
             getGroup();
         }else{
@@ -145,12 +149,14 @@ public class GroupDetailsActivity extends AppCompatActivity {
         optionsNames.add("Nombre"); optionsNames.add("Tags"); optionsNames.add("Url");
         ArrayAdapter<String> adapter = new ArrayAdapter(activity, R.layout.drop_down_item, optionsNames);
         searchOptionsAutoCompleteText.setAdapter(adapter);
+        searchOptionsAutoCompleteText.setText("Tags");
         searchBar.setOnKeyListener(new View.OnKeyListener() {
             @Override
             public boolean onKey(View view, int keyCode, KeyEvent keyEvent) {
                 if ((keyEvent.getAction() == KeyEvent.ACTION_DOWN) && (keyCode == KeyEvent.KEYCODE_ENTER)) {
                     if(searchOptionsAutoCompleteText.getText().toString().equals("Tags")){
                         createChip(searchBar.getText().toString());
+                        searchBar.setText("");
                     }
                     triggerSearchAction(searchOptionsAutoCompleteText.getText().toString());
                     return true;
@@ -224,7 +230,7 @@ public class GroupDetailsActivity extends AppCompatActivity {
         for (Link link : searchedLinks){
             items.add(new DynamicLinksRvModel(link, pos));
         }
-        dynamicRvResAdapter = new DynamicGroupDetailsRvAdapter(items, group, this);
+        dynamicRvResAdapter = new DynamicGroupDetailsRvAdapter(items, group, this, (UpdateLinkRecyclerView) activity);
         dynamicRecyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         dynamicRecyclerView.setAdapter(dynamicRvResAdapter);
     }
@@ -306,9 +312,61 @@ public class GroupDetailsActivity extends AppCompatActivity {
         for (Link link : group.getLinks()){
             items.add(new DynamicLinksRvModel(link, pos));
         }
-        dynamicRvResAdapter = new DynamicGroupDetailsRvAdapter(items, group, this);
+        dynamicRvResAdapter = new DynamicGroupDetailsRvAdapter(items, group, this, this);
         dynamicRecyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         dynamicRecyclerView.setAdapter(dynamicRvResAdapter);
     }
 
+    @Override
+    public void callBack(int position, ArrayList<DynamicLinksRvModel> items) {
+
+    }
+
+    @Override
+    public void callBack(int position, ArrayList<DynamicLinksRvModel> items, DynamicLinksRvModel toEliminate) {
+        try{
+            Call<Void> deleteAction = api.deleteLink(user.email, group.getName(), toEliminate.getId());
+            deleteAction.enqueue(new Callback<Void>() {
+                @Override
+                public void onResponse(Call<Void> call, Response<Void> response) {
+                    if(!response.isSuccessful()){
+                        Log.i("Not successful", response.code() + "");
+                        return;
+                    }
+                    ArrayList<DynamicLinksRvModel> newItems = dynamicRvResAdapter.getItems();
+                    newItems.remove(toEliminate);
+                    dynamicRvResAdapter = new DynamicGroupDetailsRvAdapter(newItems, group, (GroupDetailsActivity) activity, (UpdateLinkRecyclerView) activity);
+                    dynamicRvResAdapter.notifyDataSetChanged();
+                    dynamicRecyclerView.setAdapter(dynamicRvResAdapter);
+                    dynamicRvResAdapter.setOnItemClickListener(new DynamicGroupDetailsRvAdapter.OnItemClickListener() {
+                        @Override
+                        public void onClickItem() {
+                            triggerCreateLinkActivity(null);
+                        }
+                    });
+                    List<Link> linkList = group.getLinks();
+                    for (int i = 0; i < linkList.size(); i++){
+                        if(linkList.get(i).getId().equals(toEliminate.getId())){
+                            group.getLinks().remove(i);
+                        }
+                    }
+
+                    if(group.getLinks().size() == 1){
+                        groupLinksText.setText(group.getLinks().size() + " Link");
+                    } else {
+                        groupLinksText.setText(group.getLinks().size() + " Links");
+                    }
+
+
+                }
+
+                @Override
+                public void onFailure(Call<Void> call, Throwable t) {
+                    Log.i("Failure", t.getMessage());
+                }
+            });
+        } catch (Exception e){
+            Log.i("Failure", e.getMessage());
+        }
+    }
 }

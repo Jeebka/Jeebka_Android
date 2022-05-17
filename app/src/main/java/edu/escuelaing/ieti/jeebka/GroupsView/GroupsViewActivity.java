@@ -63,6 +63,12 @@ public class GroupsViewActivity extends AppCompatActivity implements UpdateRecyc
         settingUpView();
     }
 
+    @Override
+    public void onBackPressed() {
+        Intent intent = new Intent(GroupsViewActivity.this, LogInActivity.class);
+        startActivity(intent);
+    }
+
     private void settingUpView(){
         retrofit = new Retrofit.Builder()
                 .baseUrl("https://jeebka-backend.azurewebsites.net/v1/jeebka/")
@@ -164,14 +170,55 @@ public class GroupsViewActivity extends AppCompatActivity implements UpdateRecyc
         staticRecyclerView.setAdapter(staticRvAdapter);
 
         dynamicRecyclerView = findViewById(R.id.rv_2) ;
-        dynamicRvAdapter = new DynamicRvAdapter(items, loggedUser);
+        dynamicRvAdapter = new DynamicRvAdapter(items, loggedUser, this);
         dynamicRecyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         dynamicRecyclerView.setAdapter(dynamicRvAdapter);
     }
 
     @Override
+    public void callBack(int position, ArrayList<DynamicGroupRvModel> items, DynamicGroupRvModel toEliminate) {
+        try{
+            Call<Void> deleteAction = api.deleteGroup(loggedUser.email, toEliminate.getName());
+            deleteAction.enqueue(new Callback<Void>() {
+                @Override
+                public void onResponse(Call<Void> call, Response<Void> response) {
+                    if(!response.isSuccessful()){
+                        Log.i("Not successful", response.code() + "");
+                        return;
+                    }
+                    ArrayList<DynamicGroupRvModel> newItems = dynamicRvAdapter.getItems();
+                    newItems.remove(toEliminate);
+                    dynamicRvAdapter = new DynamicRvAdapter(newItems, loggedUser, (UpdateRecyclerView) activity);
+                    dynamicRvAdapter.notifyDataSetChanged();
+                    dynamicRecyclerView.setAdapter(dynamicRvAdapter);
+
+                    dynamicRvAdapter.setOnItemClickListener(new DynamicRvAdapter.OnItemClickListener() {
+                        @Override
+                        public void onClickItem(int position) {
+                            pos = items.get(position).getPos();
+                            Intent intent = new Intent(activity, GroupDetailsActivity.class);
+                            intent.putExtra("CurrentGroup", (new Gson()).toJson(items.get(position)));
+                            intent.putExtra("pos", pos);
+                            intent.putExtra("LoggedUser", (new Gson()).toJson(loggedUser));
+                            startActivity(intent);
+                        }
+                    });
+
+                }
+
+                @Override
+                public void onFailure(Call<Void> call, Throwable t) {
+                    Log.i("Failure", t.getMessage());
+                }
+            });
+        } catch (Exception e){
+            Log.i("Failure", e.getMessage());
+        }
+    }
+
+    @Override
     public void callBack(int position, ArrayList<DynamicGroupRvModel> items) {
-        dynamicRvAdapter = new DynamicRvAdapter(items, loggedUser);
+        dynamicRvAdapter = new DynamicRvAdapter(items, loggedUser, this);
         dynamicRvAdapter.notifyDataSetChanged();
         dynamicRecyclerView.setAdapter(dynamicRvAdapter);
 

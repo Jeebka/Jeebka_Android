@@ -18,6 +18,7 @@ import edu.escuelaing.ieti.jeebka.R;
 
 public class DynamicRvAdapter extends  RecyclerView.Adapter<DynamicRvAdapter.DynamicRvHolder>{
     public ArrayList<DynamicGroupRvModel> dynamicRVModels;
+    UpdateRecyclerView updateRecyclerView;
     public User user;
     private OnItemClickListener mListener;
 
@@ -29,14 +30,19 @@ public class DynamicRvAdapter extends  RecyclerView.Adapter<DynamicRvAdapter.Dyn
         this.mListener = mListener;
     }
 
-    public DynamicRvAdapter(ArrayList<DynamicGroupRvModel> dynamicRVModels, User user){
+    public DynamicRvAdapter(ArrayList<DynamicGroupRvModel> dynamicRVModels, User user, UpdateRecyclerView updateRecyclerView){
         this.dynamicRVModels = dynamicRVModels;
         this.user = user;
+        this.updateRecyclerView = updateRecyclerView;
+    }
+
+    public ArrayList<DynamicGroupRvModel> getItems(){
+        return dynamicRVModels;
     }
 
     public class DynamicRvHolder extends RecyclerView.ViewHolder {
 
-        public ImageView imageView;
+        public ImageView imageView, closeImage;
         public TextView nameText, detailsText;
         ConstraintLayout constraintLayout;
         public DynamicRvHolder(@NonNull View itemView, final OnItemClickListener mListener) {
@@ -45,6 +51,7 @@ public class DynamicRvAdapter extends  RecyclerView.Adapter<DynamicRvAdapter.Dyn
             nameText = itemView.findViewById(R.id.name);
             detailsText = itemView.findViewById(R.id.details);
             constraintLayout = itemView.findViewById(R.id.constraintLayout);
+            closeImage = itemView.findViewById(R.id.close_icon);
 
             itemView.setOnClickListener(new View.OnClickListener(){
 
@@ -79,6 +86,16 @@ public class DynamicRvAdapter extends  RecyclerView.Adapter<DynamicRvAdapter.Dyn
             holder.detailsText.setText(currentItem.getLinks().size() + " Links");
         } else{
             holder.detailsText.setText(currentItem.getLinks().size() + " Link");
+        }
+        if(currentItem.getPos() == 0){
+            holder.closeImage.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    updateRecyclerView.callBack(0, dynamicRVModels,currentItem);
+                }
+            });
+        } else{
+            holder.closeImage.setVisibility(View.INVISIBLE);
         }
 
     }

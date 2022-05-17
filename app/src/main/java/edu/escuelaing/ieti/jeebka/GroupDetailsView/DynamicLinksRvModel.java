@@ -22,10 +22,10 @@ public class DynamicLinksRvModel {
         this.pos = pos;
         this.groups = new ArrayList<>();
         this.tags = new ArrayList<>();
-        tags.add("tag1"); tags.add("tag2"); tags.add("tag3"); tags.add("tag4");
     }
 
     public DynamicLinksRvModel(Link link, int pos) {
+        this.id = link.getId();
         this.name = link.getName();
         this.url = link.getUrl();
         this.pos = pos;

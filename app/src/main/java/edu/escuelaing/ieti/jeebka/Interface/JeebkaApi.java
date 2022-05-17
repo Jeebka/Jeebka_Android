@@ -16,6 +16,7 @@ import edu.escuelaing.ieti.jeebka.Models.LoginResponse;
 import edu.escuelaing.ieti.jeebka.Models.User;
 import retrofit2.Call;
 import retrofit2.http.Body;
+import retrofit2.http.DELETE;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
 import retrofit2.http.PUT;
@@ -58,5 +59,11 @@ public interface JeebkaApi {
 
     @PUT("users/{email}/groups/{groupName}/links/{linkName}/update")
     Call<List<Link>> updateLink(@Path("email") String email, @Path("groupName") String groupName, @Path("linkName") String linkName, @Body LinkUpdateRequest linkUpdateRequest);
+
+    @DELETE("users/{email}/groups/{name}")
+    Call<Void> deleteGroup(@Path("email") String email, @Path("name") String group);
+
+    @DELETE("users/{email}/groups/{name}/links/{linkId}")
+    Call<Void> deleteLink(@Path("email") String email, @Path("name") String group, @Path("linkId") String linkId);
 
 }

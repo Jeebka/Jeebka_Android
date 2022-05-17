@@ -75,4 +75,5 @@ public class DynamicGroupRvModel {
     public int getPos() {
         return pos;
     }
+
 }

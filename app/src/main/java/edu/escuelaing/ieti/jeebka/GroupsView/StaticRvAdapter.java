@@ -24,6 +24,7 @@ import com.google.gson.JsonParser;
 
 import java.util.ArrayList;
 import java.util.Dictionary;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
@@ -161,6 +162,7 @@ public class StaticRvAdapter  extends  RecyclerView.Adapter<StaticRvAdapter.Stat
 
     private void callPublicGroups(int pos){
         ArrayList<DynamicGroupRvModel> parsedItems = new ArrayList<>();
+        HashSet<String> groupsId = new HashSet<>();
         Call<List<Group>> callPublicGroups = api.showPublicGroups(user.email);
         callPublicGroups.enqueue(new Callback<List<Group>>() {
             @Override
@@ -170,7 +172,8 @@ public class StaticRvAdapter  extends  RecyclerView.Adapter<StaticRvAdapter.Stat
                     return;
                 }
                 for (Group group : response.body()){
-                    parsedItems.add(new DynamicGroupRvModel(group, pos));
+                    if(groupsId.add(group.getId()))
+                        parsedItems.add(new DynamicGroupRvModel(group, pos));
                 }
                 updateRecyclerView.callBack(pos, parsedItems);
             }

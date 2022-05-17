@@ -21,6 +21,14 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintWidth_percent=".9">
 
+        <ImageView
+            android:id="@+id/close_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_close"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
         <TextView
             android:id="@+id/link_name"
             android:layout_width="wrap_content"
@@ -28,12 +36,12 @@
             android:text="Link Name"
             android:textSize="18sp"
             android:textStyle="bold"
-            app:layout_constraintHorizontal_bias=".1"
-            app:layout_constraintVertical_bias=".15"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias=".1"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias=".15" />
 
         <TextView
             android:id="@+id/link_url"

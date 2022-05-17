@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -23,6 +24,7 @@ import java.util.List;
 
 import edu.escuelaing.ieti.jeebka.CreateViews.CreateLinkActivity;
 import edu.escuelaing.ieti.jeebka.GroupsView.DynamicGroupRvModel;
+import edu.escuelaing.ieti.jeebka.GroupsView.DynamicRvAdapter;
 import edu.escuelaing.ieti.jeebka.Interface.JeebkaApi;
 import edu.escuelaing.ieti.jeebka.Models.Group;
 import edu.escuelaing.ieti.jeebka.Models.Link;
@@ -42,10 +44,22 @@ public class DynamicGroupDetailsRvAdapter extends  RecyclerView.Adapter<DynamicG
     Retrofit retrofit;
     JeebkaApi api;
     GroupDetailsActivity activity;
-    public DynamicGroupDetailsRvAdapter(ArrayList<DynamicLinksRvModel> dynamicLinksRVModels, Group group, GroupDetailsActivity activity){
+    UpdateLinkRecyclerView updateLinkRecyclerView;
+    private OnItemClickListener mListener;
+
+    public interface OnItemClickListener{
+        void onClickItem();
+    }
+
+    public void setOnItemClickListener(OnItemClickListener mListener){
+        this.mListener = mListener;
+    }
+
+    public DynamicGroupDetailsRvAdapter(ArrayList<DynamicLinksRvModel> dynamicLinksRVModels, Group group, GroupDetailsActivity activity, UpdateLinkRecyclerView updateLinkRecyclerView){
         this.dynamicLinksRVModels = dynamicLinksRVModels;
         this.group = group;
         this.activity = activity;
+        this.updateLinkRecyclerView = updateLinkRecyclerView;
         check = true;
         retrofit = new Retrofit.Builder()
                 .baseUrl("https://jeebka-backend.azurewebsites.net/v1/jeebka/")
@@ -58,13 +72,19 @@ public class DynamicGroupDetailsRvAdapter extends  RecyclerView.Adapter<DynamicG
         public TextView linkName, linkUrl;
         ChipGroup tagsContainer;
         ConstraintLayout constraintLayout;
+        ImageView closeImage;
         public DynamicRvResHolder(@NonNull View itemView) {
             super(itemView);
             linkName = itemView.findViewById(R.id.link_name);
             linkUrl = itemView.findViewById(R.id.link_url);
             constraintLayout = itemView.findViewById(R.id.constraintLayout);
             tagsContainer = itemView.findViewById(R.id.tags_container);
+            closeImage = itemView.findViewById(R.id.close_icon);
         }
+    }
+
+    public ArrayList<DynamicLinksRvModel> getItems(){
+        return dynamicLinksRVModels;
     }
 
     @NonNull
@@ -101,54 +121,22 @@ public class DynamicGroupDetailsRvAdapter extends  RecyclerView.Adapter<DynamicG
                 triggerCreateLinkActivity(link);
             }
         });
-
+        if(currentItem.getPos() == 0){
+            holder.closeImage.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    updateLinkRecyclerView.callBack(0, dynamicLinksRVModels,currentItem);
+                }
+            });
+        } else{
+            holder.closeImage.setVisibility(View.INVISIBLE);
+        }
         p = currentItem.getPos();
-        /*dynamicLinksRVModels = new ArrayList<>();
-        dynamicLinksRVModels.add(new DynamicLinksRvModel("Link 1", "http:google.com", p));
-        dynamicLinksRVModels.add(new DynamicLinksRvModel("Link 2", "http:youtube.com", p));
-        dynamicLinksRVModels.add(new DynamicLinksRvModel("Link 3", "http:google.com", p));
-        dynamicLinksRVModels.add(new DynamicLinksRvModel("Link 4", "http:youtube.com", p));
-        dynamicLinksRVModels.add(new DynamicLinksRvModel("Link 5", "http:google.com", p));
-        dynamicLinksRVModels.add(new DynamicLinksRvModel("Link 6", "http:youtube.com", p));
-        dynamicLinksRVModels.add(new DynamicLinksRvModel("Link 7", "http:google.com", p));
-        dynamicLinksRVModels.add(new DynamicLinksRvModel("Link 8", "http:youtube.com", p));
-        dynamicLinksRVModels.add(new DynamicLinksRvModel("Link 9", "http:google.com", p));
-        dynamicLinksRVModels.add(new DynamicLinksRvModel("Link 10", "http:youtube.com", p));
-        notifyDataSetChanged();*/
     }
 
     private void triggerCreateLinkActivity(Link link){
         activity.triggerCreateLinkActivity(link);
     }
-
-    /*private DynamicLinksRvModel getLinks(int position){
-        try{
-            Call<List<Group>> callOwnGroups = api.getUsersGroups(user.email);
-            callOwnGroups.enqueue(new Callback<List<Group>>() {
-                @RequiresApi(api = Build.VERSION_CODES.O)
-                @Override
-                public void onResponse(Call<List<Group>> callOwnGroups, Response<List<Group>> response) {
-                    if(!response.isSuccessful()){
-                        Log.i("Not successful", response.code() + "");
-                        return;
-                    }
-                    for(Group group : response.body()){
-                        parsedItems.add(new DynamicGroupRvModel(group, pos));
-                    }
-                    updateRecyclerView.callBack(pos, parsedItems);
-
-                }
-
-                @Override
-                public void onFailure(Call<List<Group>> callOwnGroups, Throwable t) {
-                    Log.i("Failure", t.getMessage());
-                }
-            });
-        } catch (Exception e){
-            Log.i("Failure", e.getMessage());
-        }
-        return null;
-    }*/
 
     @Override
     public int getItemCount() {
