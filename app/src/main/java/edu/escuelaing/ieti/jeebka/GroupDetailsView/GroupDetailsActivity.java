@@ -26,7 +26,9 @@ import com.google.gson.Gson;
 import java.util.ArrayList;
 import java.util.List;
 import edu.escuelaing.ieti.jeebka.CreateViews.CreateLinkActivity;
+import edu.escuelaing.ieti.jeebka.GroupsView.GroupsViewActivity;
 import edu.escuelaing.ieti.jeebka.Interface.JeebkaApi;
+import edu.escuelaing.ieti.jeebka.LoginView.LogInActivity;
 import edu.escuelaing.ieti.jeebka.Models.Group;
 import edu.escuelaing.ieti.jeebka.Models.Link;
 import edu.escuelaing.ieti.jeebka.Models.User;
@@ -56,7 +58,6 @@ public class GroupDetailsActivity extends AppCompatActivity {
     AutoCompleteTextView searchOptionsAutoCompleteText;
     ChipGroup searchItemsChipGroup;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -76,7 +77,13 @@ public class GroupDetailsActivity extends AppCompatActivity {
         pos = intent.getIntExtra("pos", 0);
         group = (new Gson()).fromJson(intent.getStringExtra("CurrentGroup"), Group.class);
         user = (new Gson()).fromJson(intent.getStringExtra("LoggedUser"), User.class);
-        getGroup();
+        Log.i("Position", pos + "");
+        if(pos == 0){
+            getGroup();
+        }else{
+            settingUpConditionalComponents();
+            settingUpSearchComponents();
+        }
 
         backgroundImage =  findViewById(R.id.imageView);
         backgroundImage.setColorFilter(Color.parseColor(group.getColor()), PorterDuff.Mode.SRC_IN);

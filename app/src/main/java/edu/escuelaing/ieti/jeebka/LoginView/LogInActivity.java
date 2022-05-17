@@ -13,18 +13,16 @@ import android.os.Bundle;
 import com.google.android.material.tabs.TabLayout;
 
 import edu.escuelaing.ieti.jeebka.GroupsView.GroupsViewActivity;
+import edu.escuelaing.ieti.jeebka.IntroductoryActivity;
 import edu.escuelaing.ieti.jeebka.R;
 
 public class LogInActivity extends AppCompatActivity {
     TabLayout tabLayout;
-    ViewPager2 viewPager;
-    Dialog dialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_log_in);
-
         tabLayout = findViewById(R.id.tab_layout);
 
         FragmentManager fm = getSupportFragmentManager();

@@ -26,6 +26,12 @@ import edu.escuelaing.ieti.jeebka.LoginView.LogInActivity;
 
     }
 
+     @Override
+     public void onBackPressed() {
+         IntroductoryActivity.this.finish();
+         System.exit(0);
+     }
+
     private void settingUpView(){
         splashImage = findViewById(R.id.splash_image);
         welcomeText = findViewById(R.id.welcome_text);

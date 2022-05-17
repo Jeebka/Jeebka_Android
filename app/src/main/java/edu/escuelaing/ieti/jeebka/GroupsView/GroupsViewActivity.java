@@ -28,6 +28,7 @@ import java.util.List;
 import edu.escuelaing.ieti.jeebka.CreateViews.CreateGroupActivity;
 import edu.escuelaing.ieti.jeebka.CreateViews.CreateLinkActivity;
 import edu.escuelaing.ieti.jeebka.Interface.JeebkaApi;
+import edu.escuelaing.ieti.jeebka.LoginView.LogInActivity;
 import edu.escuelaing.ieti.jeebka.Models.Group;
 import edu.escuelaing.ieti.jeebka.Models.User;
 import edu.escuelaing.ieti.jeebka.R;
@@ -61,7 +62,6 @@ public class GroupsViewActivity extends AppCompatActivity implements UpdateRecyc
         activity = this;
         settingUpView();
     }
-
 
     private void settingUpView(){
         retrofit = new Retrofit.Builder()
