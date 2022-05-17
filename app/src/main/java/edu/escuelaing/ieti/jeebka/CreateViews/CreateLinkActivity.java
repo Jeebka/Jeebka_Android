@@ -17,6 +17,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.material.chip.Chip;
@@ -37,6 +38,7 @@ import edu.escuelaing.ieti.jeebka.GroupsView.GroupsViewActivity;
 import edu.escuelaing.ieti.jeebka.Interface.JeebkaApi;
 import edu.escuelaing.ieti.jeebka.Models.Group;
 import edu.escuelaing.ieti.jeebka.Models.Link;
+import edu.escuelaing.ieti.jeebka.Models.LinkUpdateRequest;
 import edu.escuelaing.ieti.jeebka.Models.User;
 import edu.escuelaing.ieti.jeebka.R;
 import retrofit2.Call;
@@ -92,12 +94,25 @@ public class CreateLinkActivity extends Activity {
         tagsLayout = findViewById(R.id.tags_drop_down);
         autoCompleteTagsList = findViewById(R.id.tags_autocomplete_items);
         autoCompleteGroupsList = findViewById(R.id.group_autocomplete_items);
-        tagsContainer = findViewById(R.id.tags_container);
+        tagsContainer = findViewById(R.id.
+                tags_container);
         createButton = findViewById(R.id.create_link_button);
+        if(actionName != null && actionName.equals("Update")){
+            TextView viewName = findViewById(R.id.view_name);
+            viewName.setText("Actualizar Link");
+            linkUrl.setEnabled(false);
+            autoCompleteGroupsList.setEnabled(false);
+
+        }
         createButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                createLink();
+                if(actionName != null && actionName.equals("Update")){
+                    updateLink();
+                } else{
+                    createLink();
+                }
+
             }
         });
     }
@@ -160,10 +175,8 @@ public class CreateLinkActivity extends Activity {
                 @Override
                 public void onResponse(Call<HashSet<String>> call, Response<HashSet<String>> response) {
                     if(!response.isSuccessful()){
-                        Log.i("Not successful", response.code() + "");
                         return;
                     }
-                    Log.i("User tags", (new Gson()).toJson(response.body()));
                     settingUpAutoCompleteTagsView(response.body());
 
                 }
@@ -179,10 +192,8 @@ public class CreateLinkActivity extends Activity {
     }
 
     private void settingUpAutoCompleteTagsView(HashSet<String> userTags){
-        Log.i("Info", userTags.size() + "");
         List<String> userTagsNames =  new ArrayList<>();
         for (String tag: userTags) {
-            Log.i("Tag info", tag);
             userTagsNames.add(tag);
         }
         ArrayAdapter<String> adapter = new ArrayAdapter(activity, R.layout.drop_down_item, userTagsNames);
@@ -203,7 +214,6 @@ public class CreateLinkActivity extends Activity {
                     autoCompleteTagsList.setText("");
                     createChip(tagName);
                     return true;
-
                 }
                 return false;
             }
@@ -237,16 +247,33 @@ public class CreateLinkActivity extends Activity {
         }
     }
 
+    private void updateLink(){
+        Log.i("Update", "update Link");
+        List<String> tags = getTagsFromChips();
+        LinkUpdateRequest request = new LinkUpdateRequest(linkName.getText().toString(), tags);
+        Call<List<Link>> call = api.updateLink(loggedUser.getEmail(), group.getName(), link.getName(), request);
+        call.enqueue(new Callback<List<Link>>() {
+            @Override
+            public void onResponse(Call<List<Link>> call, Response<List<Link>> response) {
+                if(!response.isSuccessful()){
+                    Log.i("Not successful BaseLink", response.code() + "");
+                    return;
+                }
+                startPreviousActivity();
+            }
+
+            @Override
+            public void onFailure(Call<List<Link>> call, Throwable t) {
+                Log.i("Update Link Failure", t.getMessage());
+            }
+        });
+    }
     private void createLink(){
         String linkNameString =  String.valueOf(linkName.getText()), linkUrlString = String.valueOf(linkUrl.getText());
         String groupName = String.valueOf(autoCompleteGroupsList.getText());
         String userEmail =  String.valueOf(loggedUser.getEmail());
         if(!linkNameString.equals("") && !linkUrlString.equals("") && !groupName.equals("")){
-            List<String> tags = new ArrayList<>();
-            for (int i = 0; i < tagsContainer.getChildCount();i++){
-                Chip chip = (Chip)tagsContainer.getChildAt(i);
-                tags.add(chip.getText().toString());
-            }
+            List<String> tags = getTagsFromChips();
             LinkDto baseLink = new LinkDto(linkUrlString, linkNameString);
             TaggedLinkDto linkTags = new TaggedLinkDto(linkUrlString, linkNameString, tags);
             if (tags.size() > 0) {
@@ -258,6 +285,16 @@ public class CreateLinkActivity extends Activity {
 
         }
     }
+
+    private List<String> getTagsFromChips(){
+        List<String> tags = new ArrayList<>();
+        for (int i = 0; i < tagsContainer.getChildCount();i++){
+            Chip chip = (Chip)tagsContainer.getChildAt(i);
+            tags.add(chip.getText().toString());
+        }
+        return tags;
+    }
+
     private void createBaseLink(LinkDto baseLink, String userEmail, String groupName){
         Call<LinkDto> call = api.createLinkNoTags(baseLink, userEmail, groupName);
         call.enqueue(new Callback<LinkDto>() {
@@ -269,13 +306,11 @@ public class CreateLinkActivity extends Activity {
                 }
                 Log.i("Created", "Base Link created");
                 startPreviousActivity();
-
             }
 
             @Override
             public void onFailure(Call<LinkDto> call, Throwable t) {
                 Log.i("Create BaseLink Failure", t.getMessage());
-
             }
         });
     }
@@ -301,13 +336,11 @@ public class CreateLinkActivity extends Activity {
     }
 
     private void startPreviousActivity(){
-        Log.i("ActivityName", previousActivityName);
         if(previousActivityName.equals("GroupsView")){
             Intent intent = new Intent(CreateLinkActivity.this, GroupsViewActivity.class);
             intent.putExtra("LoggedUser", (new Gson()).toJson(loggedUser));
             startActivity(intent);
         } else if(previousActivityName.equals("GroupDetailsActivity")){
-            Log.i("ActivityName", "entro details");
             Intent intent2 = new Intent(CreateLinkActivity.this, GroupDetailsActivity.class);
             intent2.putExtra("LoggedUser", (new Gson()).toJson(loggedUser));
             intent2.putExtra("CurrentGroup", (new Gson()).toJson(group));

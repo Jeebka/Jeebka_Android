@@ -130,9 +130,7 @@ public class GroupsViewActivity extends AppCompatActivity implements UpdateRecyc
                         }
                     }
                     callBack(pos, parsedItems);
-
                 }
-
                 @Override
                 public void onFailure(Call<List<Group>> callOwnGroups, Throwable t) {
                     Log.i("Failure", t.getMessage());

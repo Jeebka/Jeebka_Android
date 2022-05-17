@@ -1,5 +1,4 @@
 package edu.escuelaing.ieti.jeebka.GroupDetailsView;
-
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -10,13 +9,22 @@ import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import com.google.android.material.chip.Chip;
+import com.google.android.material.chip.ChipGroup;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.textfield.TextInputLayout;
 import com.google.gson.Gson;
 import java.util.ArrayList;
+import java.util.List;
 import edu.escuelaing.ieti.jeebka.CreateViews.CreateLinkActivity;
 import edu.escuelaing.ieti.jeebka.Interface.JeebkaApi;
 import edu.escuelaing.ieti.jeebka.Models.Group;
@@ -43,6 +51,11 @@ public class GroupDetailsActivity extends AppCompatActivity {
     Activity activity;
     Retrofit retrofit;
     JeebkaApi api;
+    EditText searchBar;
+    TextInputLayout searchOptionsLayout;
+    AutoCompleteTextView searchOptionsAutoCompleteText;
+    ChipGroup searchItemsChipGroup;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,7 +95,6 @@ public class GroupDetailsActivity extends AppCompatActivity {
                 triggerCreateLinkActivity(null);
             }
         });
-
     }
 
     private void getGroup(){
@@ -99,6 +111,7 @@ public class GroupDetailsActivity extends AppCompatActivity {
                     group = response.body();
                     group.setPublic(response.body().isPublic());
                     settingUpConditionalComponents();
+                    settingUpSearchComponents();
                 }
 
                 @Override
@@ -111,6 +124,136 @@ public class GroupDetailsActivity extends AppCompatActivity {
         }
     }
 
+    public void settingUpSearchComponents(){
+        searchBar = findViewById(R.id.search);
+        searchOptionsLayout = findViewById(R.id.options_drop_down);
+        searchOptionsAutoCompleteText = findViewById(R.id.options_autocomplete_items);
+        searchItemsChipGroup = findViewById(R.id.search_items_container);
+        settingUpAutoCompleteOptionsView();
+
+    }
+
+    private void settingUpAutoCompleteOptionsView(){
+        List<String> optionsNames =  new ArrayList<>();
+        optionsNames.add("Nombre"); optionsNames.add("Tags"); optionsNames.add("Url");
+        ArrayAdapter<String> adapter = new ArrayAdapter(activity, R.layout.drop_down_item, optionsNames);
+        searchOptionsAutoCompleteText.setAdapter(adapter);
+        searchBar.setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View view, int keyCode, KeyEvent keyEvent) {
+                if ((keyEvent.getAction() == KeyEvent.ACTION_DOWN) && (keyCode == KeyEvent.KEYCODE_ENTER)) {
+                    if(searchOptionsAutoCompleteText.getText().toString().equals("Tags")){
+                        createChip(searchBar.getText().toString());
+                    }
+                    triggerSearchAction(searchOptionsAutoCompleteText.getText().toString());
+                    return true;
+                }
+                return false;
+            }
+        });
+    }
+
+    private void triggerSearchAction(String options){
+        if(options.equals("Tags")){
+            searchByTags();
+        } else if(options.equals("Nombre")){
+            searchByName();
+        } else if(options.equals("Url")){
+            searchByUrl();
+        }
+    }
+
+    private void searchByTags(){
+        try{
+            String userEmail = user.getEmail(), groupName = group.getName();
+            List<String> tagsToSearch = new ArrayList<>();
+            for (int i = 0; i < searchItemsChipGroup.getChildCount();i++){
+                Chip chip = (Chip)searchItemsChipGroup.getChildAt(i);
+                tagsToSearch.add(chip.getText().toString());
+            }
+            Call<List<Link>> linksSearched = api.getLinksByTags(userEmail,groupName, tagsToSearch);
+            linksSearched.enqueue(new Callback<List<Link>>() {
+                @Override
+                public void onResponse(Call<List<Link>> call, Response<List<Link>> response) {
+                    if(!response.isSuccessful()){
+                        Log.i("Not successful", response.code() + "");
+                        return;
+                    }
+                    settingUpAdapterSearch(response.body());
+                }
+
+                @Override
+                public void onFailure(Call<List<Link>> call, Throwable t) {
+                    Log.i("Failure", t.getMessage());
+                }
+            });
+        } catch (Exception e){
+            Log.i("Failure", e.getMessage());
+        }
+    }
+
+    private void searchByName(){
+        List<Link> searchedLinks = new ArrayList<>();
+        for(Link link : group.getLinks()){
+            if(link.getName().toLowerCase().contains(searchBar.getText().toString().toLowerCase())){
+                searchedLinks.add(link);
+            }
+        }
+        settingUpAdapterSearch(searchedLinks);
+    }
+
+    private void searchByUrl(){
+        List<Link> searchedLinks = new ArrayList<>();
+        for(Link link : group.getLinks()){
+            if(link.getUrl().toLowerCase().contains(searchBar.getText().toString().toLowerCase())){
+                searchedLinks.add(link);
+            }
+        }
+        settingUpAdapterSearch(searchedLinks);
+    }
+
+    private void settingUpAdapterSearch(List<Link> searchedLinks){
+        items =  new ArrayList<>();
+        for (Link link : searchedLinks){
+            items.add(new DynamicLinksRvModel(link, pos));
+        }
+        dynamicRvResAdapter = new DynamicGroupDetailsRvAdapter(items, group, this);
+        dynamicRecyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
+        dynamicRecyclerView.setAdapter(dynamicRvResAdapter);
+    }
+
+    private void createChip(String name){
+        boolean alreadyInGroup =  false;
+        for (int i = 0; i < searchItemsChipGroup.getChildCount();i++){
+            Chip chip = (Chip)searchItemsChipGroup.getChildAt(i);
+            if (chip.getText().toString().equals(name)){
+                alreadyInGroup = true;
+                break;
+            }
+        }
+        if(!alreadyInGroup){
+            Chip chip =  new Chip(activity);
+            chip.setText(name);
+            chip.setCloseIconVisible(true);
+            chip.setCheckable(false);
+            chip.setClickable(false);
+            chip.setTextSize(15);
+            searchItemsChipGroup.addView(chip);
+            chip.setOnCloseIconClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    searchItemsChipGroup.removeView(view);
+                    if(searchItemsChipGroup.getChildCount() == 0){
+                        searchItemsChipGroup.setVisibility(View.INVISIBLE);
+                    }
+                    searchByTags();
+
+                }
+            });
+            searchItemsChipGroup.setVisibility(View.VISIBLE);
+        }
+    }
+
     public void triggerCreateLinkActivity(Link link){
         Intent intent = new Intent(GroupDetailsActivity.this, CreateLinkActivity.class);
         intent.putExtra("PreviousActivity", "GroupDetailsActivity");
@@ -118,6 +261,7 @@ public class GroupDetailsActivity extends AppCompatActivity {
         intent.putExtra("CurrentGroup", (new Gson()).toJson(group));
         if(link != null) {
             intent.putExtra("CurrentLink", (new Gson()).toJson(link));
+            intent.putExtra("Action", "Update");
         }
         startActivity(intent);
     }

@@ -196,7 +196,7 @@
                     android:paddingBottom="10dp"
                     android:textSize="14sp"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toStartOf="@+id/tags_drop_down"
+                    app:layout_constraintEnd_toStartOf="@+id/options_drop_down"
                     app:layout_constraintHorizontal_bias="0.0"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
@@ -204,18 +204,18 @@
                     app:layout_constraintWidth_percent=".6" />
 
                 <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/tags_drop_down"
+                    android:id="@+id/options_drop_down"
                     style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense.ExposedDropdownMenu"
                     android:layout_width="120dp"
                     android:layout_height="wrap_content"
                     android:backgroundTint="@color/black"
-                    android:hint="Tags"
+                    android:hint="Opciones"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="1"
                     app:layout_constraintTop_toTopOf="parent">
 
                     <AutoCompleteTextView
-                        android:id="@+id/tags_autocomplete_items"
+                        android:id="@+id/options_autocomplete_items"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:inputType="none"
@@ -236,7 +236,7 @@
                 app:layout_constraintWidth_percent=".8">
 
                 <com.google.android.material.chip.ChipGroup
-                    android:id="@+id/tags_container"
+                    android:id="@+id/search_items_container"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_margin="10dp"

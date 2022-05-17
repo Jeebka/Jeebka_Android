@@ -11,12 +11,14 @@ import edu.escuelaing.ieti.jeebka.DTOs.TaggedLinkDto;
 import edu.escuelaing.ieti.jeebka.DTOs.UserDto;
 import edu.escuelaing.ieti.jeebka.Models.Group;
 import edu.escuelaing.ieti.jeebka.Models.Link;
+import edu.escuelaing.ieti.jeebka.Models.LinkUpdateRequest;
 import edu.escuelaing.ieti.jeebka.Models.LoginResponse;
 import edu.escuelaing.ieti.jeebka.Models.User;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
+import retrofit2.http.PUT;
 import retrofit2.http.Path;
 
 public interface JeebkaApi {
@@ -50,6 +52,11 @@ public interface JeebkaApi {
 
     @GET("users/{email}/query/tags")
     Call<HashSet<String>> getUserTags(@Path("email") String email);
-    
+
+    @POST("users/{email}/query/group/{group}/tag")
+    Call<List<Link>> getLinksByTags(@Path("email") String email, @Path("group") String group, @Body List<String> tags);
+
+    @PUT("users/{email}/groups/{groupName}/links/{linkName}/update")
+    Call<List<Link>> updateLink(@Path("email") String email, @Path("groupName") String groupName, @Path("linkName") String linkName, @Body LinkUpdateRequest linkUpdateRequest);
 
 }
