@@ -25,6 +25,7 @@ import com.google.gson.Gson;
 import java.util.ArrayList;
 import java.util.List;
 import edu.escuelaing.ieti.jeebka.CreateViews.CreateLinkActivity;
+import edu.escuelaing.ieti.jeebka.GroupsView.DynamicGroupRvModel;
 import edu.escuelaing.ieti.jeebka.GroupsView.GroupsViewActivity;
 import edu.escuelaing.ieti.jeebka.Interface.JeebkaApi;
 import edu.escuelaing.ieti.jeebka.Models.Group;
@@ -81,6 +82,7 @@ public class GroupDetailsActivity extends AppCompatActivity implements UpdateLin
         Intent intent = getIntent();
         pos = intent.getIntExtra("pos", 0);
         group = (new Gson()).fromJson(intent.getStringExtra("CurrentGroup"), Group.class);
+        group.setPublic((new Gson()).fromJson(intent.getStringExtra("CurrentGroup"), DynamicGroupRvModel.class).isPublic());
         user = (new Gson()).fromJson(intent.getStringExtra("LoggedUser"), User.class);
         if(pos == 0){
             getGroup();
@@ -281,6 +283,7 @@ public class GroupDetailsActivity extends AppCompatActivity implements UpdateLin
 
 
     private void settingUpConditionalComponents(){
+        Log.i("Group", (new Gson()).toJson(group));
         groupMembersText = findViewById(R.id.members_text);
         if(group.getMembers().size() == 1){
             groupMembersText.setText(group.getMembers().size() + " Miembro");
@@ -290,6 +293,7 @@ public class GroupDetailsActivity extends AppCompatActivity implements UpdateLin
         groupPublicText = findViewById(R.id.public_text);
         publicImageIcon = findViewById(R.id.public_icon);
         publicImageIcon.setVisibility(View.VISIBLE);
+        Log.i("Group", group.isPublic() + "");
         if(group.isPublic()){
             groupPublicText.setText("Publico");
             publicImageIcon.setImageResource(R.drawable.public_group);

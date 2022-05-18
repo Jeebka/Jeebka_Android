@@ -27,6 +27,7 @@ import java.util.List;
 
 import edu.escuelaing.ieti.jeebka.CreateViews.CreateGroupActivity;
 import edu.escuelaing.ieti.jeebka.CreateViews.CreateLinkActivity;
+import edu.escuelaing.ieti.jeebka.GroupDetailsView.DynamicGroupDetailsRvAdapter;
 import edu.escuelaing.ieti.jeebka.Interface.JeebkaApi;
 import edu.escuelaing.ieti.jeebka.LoginView.LogInActivity;
 import edu.escuelaing.ieti.jeebka.Models.Group;
@@ -221,6 +222,9 @@ public class GroupsViewActivity extends AppCompatActivity implements UpdateRecyc
         dynamicRvAdapter = new DynamicRvAdapter(items, loggedUser, this);
         dynamicRvAdapter.notifyDataSetChanged();
         dynamicRecyclerView.setAdapter(dynamicRvAdapter);
+        for(DynamicGroupRvModel model :  items){
+            Log.i("Group info", (new Gson()).toJson(model));
+        }
 
         dynamicRvAdapter.setOnItemClickListener(new DynamicRvAdapter.OnItemClickListener() {
             @Override
