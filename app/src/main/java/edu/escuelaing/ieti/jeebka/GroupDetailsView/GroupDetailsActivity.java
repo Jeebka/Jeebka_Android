@@ -149,7 +149,6 @@ public class GroupDetailsActivity extends AppCompatActivity implements UpdateLin
         optionsNames.add("Nombre"); optionsNames.add("Tags"); optionsNames.add("Url");
         ArrayAdapter<String> adapter = new ArrayAdapter(activity, R.layout.drop_down_item, optionsNames);
         searchOptionsAutoCompleteText.setAdapter(adapter);
-        searchOptionsAutoCompleteText.setText("Tags");
         searchBar.setOnKeyListener(new View.OnKeyListener() {
             @Override
             public boolean onKey(View view, int keyCode, KeyEvent keyEvent) {
